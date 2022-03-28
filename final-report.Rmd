@@ -1,6 +1,6 @@
 ---
 title: "Untitled"
-author: "ENTER YOUR NAMES HERE"
+author: "Group Project"
 date: "Spring 2022"
 output:
   word_document:
