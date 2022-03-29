@@ -1,5 +1,6 @@
 # load libraries
 library(tidyverse)
+library(stringr)
 
 # read data in
 survey_data <- read_csv("social_media_032822.csv")
@@ -13,7 +14,7 @@ survey_data_clean <- survey_data %>%
 survey_data_clean %>%
   count(DistributionChannel)
 
-# save clean file to disk
+# save clean file to disk (only need to be run once)
 write_csv(survey_data_clean, "survey_data_clean.csv")
 
 
@@ -22,8 +23,31 @@ bdd_survey_data <- read_csv("survey_data_clean.csv")
 # Nate's portion of cleaning:
 bdd_survey_data <- bdd_survey_data[-c(1,2),]
 bdd_survey_data <- filter(bdd_survey_data, Q1 != "I do not accept to participate in this research project")
-bdd_survey_data <- read_csv("survey_data_clean.csv")
+
+# Nizan portion of wrangling:
+cp_bdd_survey_data <- bdd_survey_data
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  filter(Q21 != "Graduate program") %>%  # took out graud program
+  mutate(Q23_modified = str_replace_all(Q23,"\\s", ""))%>% # changed format in Q23
+  mutate(Q23_modified = str_replace_all(Q23, ",", "/"))%>%
+  mutate(Q23_modified = toupper(Q23_modified))# converted to upper case Q23
+  
+  
 
 
-# pull practice 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
