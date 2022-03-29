@@ -25,3 +25,5 @@ bdd_survey_data <- filter(bdd_survey_data, Q1 != "I do not accept to participate
 bdd_survey_data <- read_csv("survey_data_clean.csv")
 
 
+# pull practice 
+
