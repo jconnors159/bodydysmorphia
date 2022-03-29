@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "BDD Survey Cleaning and Preliminary Analysis"
 author: "Group Project"
 date: "Spring 2022"
 output:
@@ -9,7 +9,9 @@ output:
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(dplyr)
 library(knitr)
+library(tinytex)
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
@@ -17,6 +19,13 @@ opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 ```{r}
 bdd_survey_data <- read_csv("processed-data/survey_data_clean.csv")
+```
+
+#Data Cleaning
+
+```{r}
+bdd_survey_data <- bdd_survey_data[-c(1,2),]
+bdd_survey_data <- filter(bdd_survey_data, Q1 != "I do not accept to participate in this research project")
 ```
 
 # Preliminary Analysis

@@ -2,7 +2,7 @@
 library(tidyverse)
 
 # read data in
-survey_data <- read_csv("raw-data/Social Media Interaction Survey_March 18, 2022_15.19.csv")
+survey_data <- read_csv("social_media_032822.csv")
 
 survey_data_clean <- survey_data %>%
   slice(-1, -2) %>%
