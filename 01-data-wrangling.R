@@ -42,7 +42,7 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
   # convert to same category example (She/her) and (her/she) be the same 
   # issue (spaces before and after the "/")
   # question: what to do with (her and they) or (he and they) or (they/them) or (IT) instances 
-  # how to group them or cateorgorize them ? 
+  # how to group them or categorize them ? 
 
 tables <- table(cp_bdd_survey_data$Q23_modified)
 tables # table to show the different output 
