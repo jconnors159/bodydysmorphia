@@ -1,6 +1,7 @@
 # load libraries
 library(tidyverse)
 library(stringr)
+library(dplyr)
 
 # read data in
 survey_data <- read_csv("social_media_032822.csv")
@@ -23,6 +24,9 @@ bdd_survey_data <- read_csv("survey_data_clean.csv")
 # Nate's portion of cleaning:
 bdd_survey_data <- bdd_survey_data[-c(1,2),]
 bdd_survey_data <- filter(bdd_survey_data, Q1 != "I do not accept to participate in this research project")
+
+#Jocelyn portion of Wrangling:
+cp_bdd_survey_data <- select(bdd_survey_data, -c(Status, UserLanguage, DistributionChannel))
 
 # Nizan portion of wrangling:
 cp_bdd_survey_data <- bdd_survey_data
