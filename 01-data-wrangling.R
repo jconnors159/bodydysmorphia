@@ -29,17 +29,20 @@ cp_bdd_survey_data <- bdd_survey_data
 
 cp_bdd_survey_data <- cp_bdd_survey_data %>%
   filter(Q21 != "Graduate program") %>%  # took out graud program
-  mutate(Q23_modified = str_replace_all(Q23,"\\s", ""))%>% # changed format in Q23
+  mutate(Q23_modified = str_replace_all(Q23,".+(\\s).+", ""))%>% # changed format in Q23
   mutate(Q23_modified = str_replace_all(Q23, ",", "/"))%>%
-  mutate(Q23_modified = toupper(Q23_modified))# converted to upper case Q23
+  mutate(Q23_modified = str_replace_all(Q23, "/(\\s)\1", "/"))%>%  #issue 1
+  mutate(Q23_modified = toupper(Q23_modified))
   
-  
+# goal to replace the spaces with /
+  # convert to same category example (She/her) and (her/she) be the same 
+  # issue (spaces before and after the "/")
+  # question: what to do with (her and they) or (he and they) or (they/them) or (IT) instances 
+  # how to group them or cateorgorize them ? 
 
-
-
-
-
-
+tables <- table(cp_bdd_survey_data$Q23_modified)
+tables # table to show the different output 
+*
 
 
 
