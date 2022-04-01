@@ -36,8 +36,11 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(Q23_modified = str_replace_all(Q23,".+(\\s).+", ""))%>% # changed format in Q23
   mutate(Q23_modified = str_replace_all(Q23, ",", "/"))%>%
   mutate(Q23_modified = str_replace_all(Q23, "/(\\s)\1", "/"))%>%  #issue 1
-  mutate(Q23_modified = toupper(Q23_modified))
-  
+  mutate(Q23_modified = toupper(Q23_modified)) %>%
+  mutate(Q23_final = case_when(grepl("THEY", Q23_modified) ~ "they",
+                             grepl("SHE", Q23_modified) ~ "she",
+                             TRUE ~ "he"))
+cp_bdd_survey_data %>% count(Q23_final, Q23_modified) %>% view()
 # goal to replace the spaces with /
   # convert to same category example (She/her) and (her/she) be the same 
   # issue (spaces before and after the "/")
