@@ -46,7 +46,7 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
 
 tables <- table(cp_bdd_survey_data$Q23_modified)
 tables # table to show the different output 
-*
+
 
 
 
