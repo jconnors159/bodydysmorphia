@@ -4,7 +4,7 @@ library(stringr)
 library(dplyr)
 
 # read data in
-survey_data <- read_csv("social_media_032822.csv")
+survey_data <- read_csv("social_media_033022.csv")
 
 survey_data_clean <- survey_data %>%
   slice(-1, -2) %>%
