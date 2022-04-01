@@ -41,6 +41,7 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
                              grepl("SHE", Q23_modified) ~ "she",
                              TRUE ~ "he"))
 cp_bdd_survey_data %>% count(Q23_final, Q23_modified) %>% view()
+
 # goal to replace the spaces with /
   # convert to same category example (She/her) and (her/she) be the same 
   # issue (spaces before and after the "/")
