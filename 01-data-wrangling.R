@@ -25,9 +25,6 @@ bdd_survey_data <- read_csv("survey_data_clean.csv")
 bdd_survey_data <- bdd_survey_data[-c(1,2),]
 bdd_survey_data <- filter(bdd_survey_data, Q1 != "I do not accept to participate in this research project")
 
-#Jocelyn portion of Wrangling:
-cp_bdd_survey_data <- select(bdd_survey_data, -c(Status, UserLanguage, DistributionChannel))
-
 # Nizan portion of wrangling:
 cp_bdd_survey_data <- bdd_survey_data
 
@@ -42,15 +39,10 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
                              TRUE ~ "he"))
 cp_bdd_survey_data %>% count(Q23_final, Q23_modified) %>% view()
 
+#Jocelyn portion of Wrangling:
+cp_bdd_survey_data <- select(bdd_survey_data, -c(Status, UserLanguage, DistributionChannel))
 
-# goal to replace the spaces with /
-  # convert to same category example (She/her) and (her/she) be the same 
-  # issue (spaces before and after the "/")
-  # question: what to do with (her and they) or (he and they) or (they/them) or (IT) instances 
-  # how to group them or categorize them ? 
 
-tables <- table(cp_bdd_survey_data$Q23_modified)
-tables # table to show the different output 
 
 
 
