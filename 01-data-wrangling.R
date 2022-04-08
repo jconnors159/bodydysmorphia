@@ -119,4 +119,53 @@ top_ten_hour_day <- subset_bdd_data %>%
 
 
 
+#multiple linear regression
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(tiktok = ifelse(grepl("TikTok", Q15),
+                         "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(youtube = ifelse(grepl("YouTube", Q15),
+                         "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(instagram = ifelse(grepl("Instagram", Q15),
+                         "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(facebook = ifelse(grepl("Facebook", Q15),
+                         "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(snapchat = ifelse(grepl("Snapchat", Q15),
+                         "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(pinterest = ifelse(grepl("Pinterest", Q15),
+                         "yes", "no"))
+
+
+
+bdd_linear_model <- lm(BDD_Score ~ tiktok + facebook + instagram + pinterest + youtube + snapchat,
+                    data = cp_bdd_survey_data)
+summary(bdd_linear_model)
+
+
+
+#To see different apps change the just change the name of the app within
+#the code below
+
+
+#       ⬇change
+effect("tiktok", bdd_linear_model) %>%
+  data.frame() %>%
+#		   ⬇change
+  ggplot(aes(x = tiktok,
+             y = fit,
+             ymin = lower,
+             ymax = upper)) +
+  geom_point() +
+  geom_errorbar()
+
+
 
