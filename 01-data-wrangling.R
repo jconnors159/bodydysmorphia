@@ -37,17 +37,45 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(Q23_final = case_when(grepl("THEY", Q23_modified) ~ "they",
                              grepl("SHE", Q23_modified) ~ "she",
                              TRUE ~ "he"))
-cp_bdd_survey_data %>% count(Q23_final, Q23_modified) %>% view()
+#cp_bdd_survey_data %>% count(Q23_final, Q23_modified) %>% view()
 
-#Jocelyn portion of Wrangling:
-cp_bdd_survey_data <- select(bdd_survey_data, -c(Status, UserLanguage, DistributionChannel))
+#Jocelyn portion of Wrangling: # changed df you selected
+cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, DistributionChannel))
 
-
-
-
+view(cp_bdd_survey_data)
 
 
+# process of data exploration:
+# bar charts 
+# histogram of questions of interest:
+summary(cp_bdd_survey_data)
+glimpse(cp_bdd_survey_data)
 
+
+# data columns of interest 
+subset_bdd_data <-cp_bdd_survey_data %>%
+  select (Q1:Q23_final, -c(Q23_modified, Q23))
+view(subset_bdd_data)
+
+
+# exploring 
+top_ten_ssmedia <- subset_bdd_data %>%
+  count(Q20) %>%
+  top_n(5)
+
+#Q20 
+top_ten_ssmedia %>%
+  ggplot(aes(x = Q20, y = n))+
+  geom_col()
+
+#Q22
+top_ten_hour_day <- subset_bdd_data %>%
+  count(Q14) %>%
+  top_n(10)
+
+top_ten_hour_day%>%
+  ggplot(aes(x= Q14, y = n))+
+  geom_col()
 
 
 
