@@ -2,7 +2,8 @@
 library(tidyverse)
 library(stringr)
 library(dplyr)
-
+library(ISLR)
+library(caret)
 # read data in
 survey_data <- read_csv("social_media_033022.csv")
 
@@ -44,41 +45,77 @@ cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, Distri
 
 view(cp_bdd_survey_data)
 
+#Hayli kNN code:
 
+#Preprocessing data w/ one-hot encoding
+bdd_k <- bdd_survey_data
+bdd_dummy <- dummyVars(BDD_Score ~ ., data = bdd_k, fullRank = TRUE)
+
+#<<<<<<< HEAD
 # process of data exploration:
-# bar charts 
-# histogram of questions of interest:
-summary(cp_bdd_survey_data)
-glimpse(cp_bdd_survey_data)
+#=======
+bdd_k <- predict(bdd_dummy, newdata = bdd_k)
+bdd_k <- data.frame(bdd_k)
+#>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
+#Re-adding target variable (BDD_Score) to dataset bc dummyVars dropped it
+score_vals <- cp_bdd_survey_data %>%
+  select(BDD_Score)
+bdd_k <- cbind(bdd_k, score_vals)
 
+#<<<<<<< HEAD
 # data columns of interest 
 subset_bdd_data <-cp_bdd_survey_data %>%
   select (Q1:Q23_final, -c(Q23_modified, Q23))
 view(subset_bdd_data)
+#=======
+#Training data
+bdd_split <- createDataPartition(bdd_k$BDD_Score, p = 0.8, list = FALSE)
+features_train <- bdd_k[bdd_split, !(names(bdd_k) %in% c('BDD_Score'))]
+features_test <- bdd_k[-bdd_split, !(names(bdd_k) %in% c('BDD_Score'))]
+target_train <- bdd_k[bdd_split, "BDD_Score"]
+target_test <- bdd_k[-bdd_split, "BDD_Score"]
+preprocess_object <- preProcess(features_train, 
+                                method = c('center', 'scale', 'knnImpute'))
+#>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
+features_train <- predict(preprocess_object, newdata = features_train)
+features_test <- predict(preprocess_object, newdata = features_test)
 
-# exploring 
+#<<<<<<< HEAD
+#=======
+#Fitting kNN model 
+knn_fit <- knn3(features_train, target_train, k = 5)
+knn_pred <- predict(knn_fit, features_test, type = 'class' )
+#>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
+
+# exploring data Nate and Nizan 
+summary(cp_bdd_survey_data)
+glimpse(cp_bdd_survey_data)
+
+#creating histogram of BDD scores
+scores <- cp_bdd_survey_data$BDD_Score
+hist(scores,
+	main = "Distribution of BDD Scores",
+	xlab = "BDD_Scores",
+	col = "blue",
+	breaks =20)
+
+# exploring questions of interest 
+
+#20
 top_ten_ssmedia <- subset_bdd_data %>%
   count(Q20) %>%
-  top_n(5)
-
-#Q20 
-top_ten_ssmedia %>%
+  top_n(5) %>%
   ggplot(aes(x = Q20, y = n))+
   geom_col()
 
 #Q22
 top_ten_hour_day <- subset_bdd_data %>%
   count(Q14) %>%
-  top_n(10)
-
-top_ten_hour_day%>%
+  top_n(10) %>%
   ggplot(aes(x= Q14, y = n))+
   geom_col()
-
-
-
 
 
 
