@@ -74,7 +74,13 @@ features_test <- predict(preprocess_object, newdata = features_test)
 knn_fit <- knn3(features_train, target_train, k = 5)
 knn_pred <- predict(knn_fit, features_test, type = 'class' )
 
-
+#creating histogram of BDD scores
+scores <- survey_data_clean$BDD_Score
+hist(scores,
+	main = "Distribution of BDD Scores",
+	xlab = "BDD_Scores",
+	col = "blue",
+	breaks =20)
 
 
 
