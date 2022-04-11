@@ -42,7 +42,7 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
 #cp_bdd_survey_data %>% count(Q23_final, Q23_modified) %>% view()
 
 #Jocelyn portion of Wrangling: # changed df you selected
-cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, DistributionChannel))
+cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, DistributionChannel, Progress, RecordedDate, Q_RecaptchaScore, Finished))
 
 #view(cp_bdd_survey_data)
 
