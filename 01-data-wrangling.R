@@ -4,6 +4,7 @@ library(stringr)
 library(dplyr)
 library(ISLR)
 library(caret)
+library(ggplot2)
 # read data in
 survey_data <- read_csv("social_media_033022.csv")
 
@@ -43,7 +44,7 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
 #Jocelyn portion of Wrangling: # changed df you selected
 cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, DistributionChannel))
 
-view(cp_bdd_survey_data)
+#view(cp_bdd_survey_data)
 
 #Hayli kNN code:
 
@@ -67,7 +68,7 @@ bdd_k <- cbind(bdd_k, score_vals)
 # data columns of interest 
 subset_bdd_data <-cp_bdd_survey_data %>%
   select (Q1:Q23_final, -c(Q23_modified, Q23))
-view(subset_bdd_data)
+#view(subset_bdd_data)
 #=======
 #Training data
 bdd_split <- createDataPartition(bdd_k$BDD_Score, p = 0.8, list = FALSE)
@@ -168,4 +169,34 @@ effect("tiktok", bdd_linear_model) %>%
   geom_errorbar()
 
 
+#Logistic Regression
+
+#adding a column 
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(Group = 
+           case_when(BDD_Score >= 30 ~ "1",
+                     BDD_Score < 30 ~ "0"))
+
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  rename(BDD_Binary = Group)
+
+#Changing the column from a character to numeric
+cp_bdd_survey_data$BDD_Binary <- as.numeric(as.character(cp_bdd_survey_data$BDD_Binary))
+
+
+log_df <- select(cp_bdd_survey_data, BDD_Score,BDD_Binary)
+head(log_df)
+
+
+#bdd_log_model <- glm(BDD_Binary ~ tiktok + facebook + instagram + pinterest + youtube + snapchat,
+#               data = cp_bdd_survey_data)
+summary(bdd_log_model)
+
+#Created possibly the ugliest logistic reg graph I have ever seen. Sorry about that, help with making it prettier would be appreciated...
+ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=BDD_Binary)) + 
+  geom_point(alpha=.5) +
+  stat_smooth(method="glm", se=FALSE, method.args = list(family=binomial),
+              col="red", lty=2)
 
