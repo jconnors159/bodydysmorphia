@@ -5,6 +5,15 @@ library(dplyr)
 library(ISLR)
 library(caret)
 library(ggplot2)
+
+
+library(mltools)
+library(data.table)
+library(cluster)
+library(ggplot2)
+library(factoextra)
+
+
 # read data in
 survey_data <- read_csv("social_media_033022.csv")
 
@@ -199,4 +208,30 @@ ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=BDD_Binary)) +
   geom_point(alpha=.5) +
   stat_smooth(method="glm", se=FALSE, method.args = list(family=binomial),
               col="red", lty=2)
+
+
+
+
+demograph_data <- subset_bdd_data[,18:22] %>% rownames_to_column()
+newdata <- subset_bdd_data[,2:10]
+newdata <- newdata %>% mutate_if(is.character,as.factor)
+newdata <- one_hot(as.data.table(newdata))
+km <- kmeans(newdata, centers = 2)
+
+#set.seed(123)
+#fviz_nbclust(newdata, kmeans, method = "wss")
+
+fviz_cluster(km, newdata, geom = "point")
+
+# compares clusters w/ boxplots
+#km$centers
+#table(demograph_data$Q22, km$cluster)
+#demograph_data$cluster <- km$cluster
+#demograph_data %>% count(Q22,cluster)
+#demograph_data %>% 
+  #ggplot(aes(x = Q22, y = BDD_Score)) + geom_boxplot() + 
+  #facet_wrap(~cluster)
+
+
+
 
