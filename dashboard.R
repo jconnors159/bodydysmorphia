@@ -1,4 +1,10 @@
 ## app.R ##
+library(tidyverse)
+library(stringr)
+library(dplyr)
+library(ISLR)
+library(caret)
+library(ggplot2)
 library(shiny)
 library(shinydashboard)
 library(fontawesome)
