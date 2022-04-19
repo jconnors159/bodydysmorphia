@@ -8,6 +8,7 @@ library(ggplot2)
 library(shiny)
 library(shinydashboard)
 library(fontawesome)
+library(plotly)
 
 # read in df
 survey_data <- read_csv("social_media_033022.csv")
@@ -84,8 +85,8 @@ body <-   dashboardBody(
   tabItems(
     # page 1 ----
     tabItem(tabName = "Dashboard", "Dashboard content.",
-            fluidRow(
-              box(plotOutput("plot1", height = 250)), # string name must match with sever 
+            fluidPage(
+              box(plotlyOutput("plot1", height = 250)), # string name must match with sever 
               box(plotOutput("plot2", height = 250)),
               box(plotOutput("plot3", height = 250)))),
     
@@ -130,19 +131,21 @@ ui <- dashboardPage(header, sidebar, body)
 server <- function(input, output, session) {
   
   
-  output$plot1 <- renderPlot({
+  output$plot1 <-  renderPlotly({
     
     #Exploring data starts here:
     #creating histogram of BDD scores sep by pronouns
     # add labels and axis points 
-    cp_bdd_survey_data %>%
+    g <- cp_bdd_survey_data %>%
       ggplot(aes(x= BDD_Score,
                  color = Q23_final,
                  fill = Q23_final))+
       geom_histogram(binwidth = 2, alpha= 0.5, position = "dodge")+
-      scale_color_brewer(palette="Set1")
-    
+      scale_color_brewer(palette="Set1")+ ggtitle("BDD Scores across Genders\n ")+
+      xlab("BDD Score")+ylab("Amount")+guides(fill=guide_legend("Gender Pronouns"))
+    g <- ggplotly(g)
   })
+  
   output$plot2 <- renderPlot({
     
     #21  class standing by usage of social media platform 
@@ -159,7 +162,8 @@ server <- function(input, output, session) {
                   y = count,
                   color = Q13,
                   fill = Q13))+
-      geom_col() #+
+      geom_col()+ ggtitle("Class Standing across Social Media Platforms ")+
+      xlab("Class Standing")+ylab("Amount")+guides(fill=guide_legend("Social Media")) #+
     #facet_wrap(~Q13, scales = "free_y") +
     #labs(caption = "note that the scale differs across subplots")
     #scale_color_brewer(palette="Set2")# ask adrianna on how to convert to bar
@@ -177,7 +181,8 @@ server <- function(input, output, session) {
     
     Q16_df%>%
       ggplot(aes(x = Q16_final, y = BDD_Score, fill= Q20))+
-      geom_boxplot()+coord_flip()
+      geom_boxplot()+coord_flip()+ggtitle("Topics explored on Social Media\n")+
+      ylab("BDD Scores")+xlab("Entertainment")+guides(fill=guide_legend("Age group"))
   })
   
   
