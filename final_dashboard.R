@@ -92,14 +92,14 @@ body <-   dashboardBody(
     # page 2 ----
     tabItem(tabName = "Widgets", "Widgets content.",
             fluidRow(
-              box(plotOutput("plot1", height = 250))
+              #box(plotOutput("plot1", height = 250))
             )),
     
     
     # page 3 ----
     tabItem(tabName = "multilinear_regression",
             fluidRow(
-              box(plotOutput("plot1", height = 250)),
+              #box(plotOutput("plot1", height = 250)),
               h1("Multi-Linear Regression content."))),
     # page 4 ----
     tabItem(tabName = "logistic_regression",
