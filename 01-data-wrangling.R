@@ -128,13 +128,13 @@ subset_bdd_data <-cp_bdd_survey_data %>%
 new_frame <-subset_bdd_data %>% separate_rows(Q13) %>% 
   group_by(Q21,BDD_Score,Q13) %>% mutate(count =n())
 
+unique(new_frame$count)
+
 new_frame %>%
 filter(Q21 != "Other")%>%
 ggplot(aes( x = Q21,
-            y = count,
-          color = Q13,
           fill = Q13))+
-geom_col() 
+geom_bar() 
   #facet_wrap(~Q13, scales = "free_y") +
   #labs(caption = "note that the scale differs across subplots")
 #scale_color_brewer(palette="Set2")# ask adrianna on how to convert to bar 

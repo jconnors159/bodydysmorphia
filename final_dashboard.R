@@ -86,9 +86,9 @@ body <-   dashboardBody(
     # page 1 ----
     tabItem(tabName = "Dashboard", "Dashboard content.",
             fluidPage(
-              box(plotlyOutput("plot1", height = 250)), # string name must match with sever 
-              box(plotOutput("plot2", height = 250)),
-              box(plotOutput("plot3", height = 250)))),
+              box(plotlyOutput("plot1")), # string name must match with sever 
+              box(plotlyOutput("plot2")),
+              box(plotlyOutput("plot3")))),
     
     # page 2 ----
     tabItem(tabName = "Widgets", "Widgets content.",
@@ -136,17 +136,17 @@ server <- function(input, output, session) {
     #Exploring data starts here:
     #creating histogram of BDD scores sep by pronouns
     # add labels and axis points 
-    g <- cp_bdd_survey_data %>%
+    gplot1 <- cp_bdd_survey_data %>%
       ggplot(aes(x= BDD_Score,
                  color = Q23_final,
                  fill = Q23_final))+
       geom_histogram(binwidth = 2, alpha= 0.5, position = "dodge")+
       scale_color_brewer(palette="Set1")+ ggtitle("BDD Scores across Genders\n ")+
       xlab("BDD Score")+ylab("Amount")+guides(fill=guide_legend("Gender Pronouns"))
-    g <- ggplotly(g)
+    gplot1 <- ggplotly(gplot1)
   })
   
-  output$plot2 <- renderPlot({
+  output$plot2 <- renderPlotly({
     
     #21  class standing by usage of social media platform 
     # subset copy of data frame : 
@@ -156,21 +156,19 @@ server <- function(input, output, session) {
     new_frame <-subset_bdd_data %>% separate_rows(Q13) %>% 
       group_by(Q21,BDD_Score,Q13) %>% mutate(count =n())
     
-    new_frame %>%
+    gplot2 <- new_frame %>%
       filter(Q21 != "Other")%>%
       ggplot(aes( x = Q21,
-                  y = count,
-                  color = Q13,
                   fill = Q13))+
-      geom_col()+ ggtitle("Class Standing across Social Media Platforms ")+
+      geom_bar()+ ggtitle("Class Standing across Social Media Platforms ")+
       xlab("Class Standing")+ylab("Amount")+guides(fill=guide_legend("Social Media")) #+
     #facet_wrap(~Q13, scales = "free_y") +
     #labs(caption = "note that the scale differs across subplots")
     #scale_color_brewer(palette="Set2")# ask adrianna on how to convert to bar
-    
+    gplot2 <-ggplotly(gplot2)
   })
   
-  output$plot3 <- renderPlot({
+  output$plot3 <-renderPlotly({
     
     #Q16 topics of usage box plot by age # needs work how show interactively by age group 
     Q16_df <- subset_bdd_data%>%
@@ -179,10 +177,11 @@ server <- function(input, output, session) {
       separate_rows(Q16_final)%>%group_by(Q16_final,BDD_Score,Q20)%>%mutate(count =n())%>%
       mutate(Percentage=paste0(round(count/sum(count)*100,2),"%"))
     
-    Q16_df%>%
+    gplot3 <- Q16_df%>%
       ggplot(aes(x = Q16_final, y = BDD_Score, fill= Q20))+
       geom_boxplot()+coord_flip()+ggtitle("Topics explored on Social Media\n")+
       ylab("BDD Scores")+xlab("Entertainment")+guides(fill=guide_legend("Age group"))
+    gplot3 <-ggplotly(gplot3)
   })
   
   
