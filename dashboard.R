@@ -54,8 +54,9 @@ subset_bdd_data <-cp_bdd_survey_data %>%
 
 
 #
-# Start of the webpage 
-#
+# Start of the webpage TALK to Joc of each body having seperate varibles and the issue I'm runing into 
+#page <- dashboardPage(skin = "purple" )
+
 header <- dashboardHeader(title = "Cross Study of Body Dismorphia and Social Media"
                           )
 
@@ -132,10 +133,11 @@ server <- function(input, output, session) {
     # add labels and axis points 
     cp_bdd_survey_data %>%
       ggplot(aes(x= BDD_Score,
-                 color = Q23_final,
                  fill = Q23_final))+
       geom_histogram(binwidth = 2, alpha= 0.5, position = "dodge")+
-      scale_color_brewer(palette="Set1")
+      scale_color_brewer(palette="Set1")+
+      ggtitle("BDD Scores across Genders\n ")+
+      xlab("BDD Score")+ylab("Amount")+guides(fill=guide_legend("Gender Pronouns"))
     
   })
   output$plot2 <- renderPlot({
@@ -152,9 +154,11 @@ server <- function(input, output, session) {
       filter(Q21 != "Other")%>%
       ggplot(aes( x = Q21,
                   y = count,
-                  color = Q13,
-                  fill = Q13))+
-      geom_col() #+
+                  fill = Q13
+                ))+
+      geom_col()+
+      ggtitle("Class Standing across Social Media Platforms ")+
+      xlab("Class Standing")+ylab("Amount")+guides(fill=guide_legend("Social Media"))#+
     #facet_wrap(~Q13, scales = "free_y") +
     #labs(caption = "note that the scale differs across subplots")
     #scale_color_brewer(palette="Set2")# ask adrianna on how to convert to bar
@@ -165,14 +169,15 @@ server <- function(input, output, session) {
     
     #Q16 topics of usage box plot by age # needs work how show interactively by age group 
     Q16_df <- subset_bdd_data%>%
-      mutate(Q16_final = str_replace_all(Q16, ".(topics).",""))%>%
       mutate(Q16_final = str_replace_all(Q16,".(and).", ""))%>%
       separate_rows(Q16_final)%>%group_by(Q16_final,BDD_Score,Q20)%>%mutate(count =n())%>%
       mutate(Percentage=paste0(round(count/sum(count)*100,2),"%"))
     
     Q16_df%>%
       ggplot(aes(x = Q16_final, y = BDD_Score, fill= Q20))+
-      geom_boxplot()+coord_flip()
+      geom_boxplot()+coord_flip()+ ggtitle("Topics explored on Social Media\n")+
+      ylab("BDD Scores")+xlab("Entertainment")+guides(fill=guide_legend("Age group")
+      )
   })
 
 
