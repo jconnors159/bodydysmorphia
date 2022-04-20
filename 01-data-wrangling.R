@@ -75,43 +75,66 @@ final_plot
 #>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
 #<<<<<<< HEAD
-# data columns of interest 
-subset_bdd_data <-cp_bdd_survey_data %>%
-  select (Q1:Q23_final, -c(Q23_modified, Q23))
-#view(subset_bdd_data)
 #=======
 
 
 #>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
+
+
+
 # exploring data Nate and Nizan 
 summary(cp_bdd_survey_data)
 glimpse(cp_bdd_survey_data)
+# data columns of interest 
+subset_bdd_data <-cp_bdd_survey_data %>%
+  select (Q1:Q23_final, -c(Q23_modified, Q23))
+#view(subset_bdd_data)
 
-#creating histogram of BDD scores
-scores <- cp_bdd_survey_data$BDD_Score
-hist(scores,
-	main = "Distribution of BDD Scores",
-	xlab = "BDD_Scores",
-	col = "blue",
-	breaks =20)
+#Exploring data starts here:
+#
+#creating histogram of BDD scores sep by pronouns
+# add labels and axis points 
+cp_bdd_survey_data %>%
+  ggplot(aes(x= BDD_Score,
+         color = Q23_final,
+         fill = Q23_final))+
+  geom_histogram(binwidth = 2, alpha= 0.5, position = "dodge")+
+  scale_color_brewer(palette="Set1")
 
+  
 # exploring questions of interest 
 
-#20
-top_ten_ssmedia <- subset_bdd_data %>%
-  count(Q20) %>%
-  top_n(5) %>%
-  ggplot(aes(x = Q20, y = n))+
-  geom_col()
+#21  class standing by usage of social media platform 
+# subset copy of data frame : 
+subset_bdd_data <-cp_bdd_survey_data %>%
+  select (Q1:Q23_final, -c(Q23_modified, Q23))
 
-#Q22
-top_ten_hour_day <- subset_bdd_data %>%
-  count(Q14) %>%
-  top_n(10) %>%
-  ggplot(aes(x= Q14, y = n))+
-  geom_col()
+new_frame <-subset_bdd_data %>% separate_rows(Q13) %>% 
+  group_by(Q21,BDD_Score,Q13) %>% mutate(count =n())
 
+unique(new_frame$count)
+
+new_frame %>%
+filter(Q21 != "Other")%>%
+ggplot(aes( x = Q21,
+          fill = Q13))+
+geom_bar() 
+  #facet_wrap(~Q13, scales = "free_y") +
+  #labs(caption = "note that the scale differs across subplots")
+#scale_color_brewer(palette="Set2")# ask adrianna on how to convert to bar 
+  
+
+#Q16 topics of usage box plot by age # needs work how show interactively by age group 
+Q16_df <- subset_bdd_data%>%
+  separate_rows(Q16)%>%group_by(Q16,BDD_Score,Q20)%>%mutate(count =n())%>%
+  mutate(Percentage=paste0(round(count/sum(count)*100,2),"%"))
+
+Q16_df%>%
+  ggplot(aes(x = Q16, y = BDD_Score, color=Q20))+
+  geom_boxplot()+coord_flip()
+
+#Exploring data ends here:
 
 
 #multiple linear regression
