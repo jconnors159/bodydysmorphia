@@ -56,22 +56,7 @@ cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, Distri
 
 #Hayli kNN code:
 
-set.seed(888)
-cp_bdd_survey_data <- cp_bdd_survey_data %>%
-  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
-                                    BDD_Score >= 20 ~ "high"))
-bdd_k <- cp_bdd_survey_data
-bdd_dummy <- dummyVars(BDD_Categories ~  tiktok + youtube + instagram + facebook + snapchat + pinterest, data = bdd_k, fullRank = TRUE)
-source("KNN_Code.R")
-final_plot
 
-cp_bdd_survey_data <- cp_bdd_survey_data %>%
-  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
-                                    BDD_Score >= 20 ~ "high"))
-bdd_k <- cp_bdd_survey_data
-bdd_dummy <- dummyVars(BDD_Categories ~  Q3 + Q4 + Q5 + Q6 + Q7 + Q8 + Q9 + Q10 + Q11, data = bdd_k, fullRank = TRUE)
-source("KNN_Code.R")
-final_plot
 #<<<<<<< HEAD
 # process of data exploration:
 #=======
@@ -241,6 +226,31 @@ newdata <- subset_bdd_data[,2:10]
 newdata <- newdata %>% mutate_if(is.character,as.factor)
 newdata <- one_hot(as.data.table(newdata))
 km <- kmeans(newdata, centers = 2)
+#Hayli KNN Code
+set.seed(888)
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+bdd_k <- cp_bdd_survey_data
+bdd_dummy <- dummyVars(BDD_Categories ~  tiktok + youtube + instagram + facebook + snapchat + pinterest, data = bdd_k, fullRank = TRUE)
+source("KNN_Code.R")
+final_plot
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+bdd_k <- cp_bdd_survey_data
+bdd_dummy <- dummyVars(BDD_Categories ~  Q3 + Q4 + Q5 + Q6 + Q7 + Q8 + Q9 + Q10 + Q11, data = bdd_k, fullRank = TRUE)
+source("KNN_Code.R")
+final_plot
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+bdd_k <- cp_bdd_survey_data
+bdd_dummy <- dummyVars(BDD_Categories ~  Q14, data = bdd_k, fullRank = TRUE)
+source("KNN_Code.R")
+final_plot
 
 #set.seed(123)
 #fviz_nbclust(newdata, kmeans, method = "wss")
