@@ -56,7 +56,6 @@ cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, Distri
 
 #Hayli kNN code:
 
-#Preprocessing data w/ one-hot encoding
 set.seed(888)
 cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
@@ -65,6 +64,11 @@ bdd_k <- cp_bdd_survey_data
 bdd_dummy <- dummyVars(BDD_Categories ~  tiktok + youtube + instagram + facebook + snapchat + pinterest, data = bdd_k, fullRank = TRUE)
 source("KNN_Code.R")
 final_plot
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+bdd_k <- cp_bdd_survey_data
 bdd_dummy <- dummyVars(BDD_Categories ~  Q3 + Q4 + Q5 + Q6 + Q7 + Q8 + Q9 + Q10 + Q11, data = bdd_k, fullRank = TRUE)
 source("KNN_Code.R")
 final_plot

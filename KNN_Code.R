@@ -1,3 +1,5 @@
+
+
 bdd_k <- predict(bdd_dummy, newdata = bdd_k)
 bdd_k <- data.frame(bdd_k)
 
