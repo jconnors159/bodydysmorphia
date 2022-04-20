@@ -174,21 +174,33 @@ summary(bdd_linear_model)
 
 
 
-#To see different apps change the just change the name of the app within
-#the code below
+bdd_linear_model_gender <- lm(BDD_Score ~ Q22,
+                       data = cp_bdd_survey_data)
+
+bdd_linear_model_age <- lm(BDD_Score ~ Q20,
+                              data = cp_bdd_survey_data)
+
+bdd_linear_model_time <- lm(BDD_Score ~ Q14,
+                           data = cp_bdd_survey_data)
+
+summary(bdd_linear_model_gender)
+summary(bdd_linear_model_age)
+#time has a statistically significant t-score
+summary(bdd_linear_model_time)
 
 
-#       ⬇change
-effect("tiktok", bdd_linear_model) %>%
+
+effect("Q14", bdd_linear_model_time) %>%
   data.frame() %>%
-#		   ⬇change
-  ggplot(aes(x = tiktok,
+  ggplot(aes(x = Q14,
              y = fit,
              ymin = lower,
              ymax = upper)) +
+  xlab("Time Spent on Social Media per day")+
+  ylab("Average BDD Score")+
+  labs(title="Average BDD score based on hours spent on social media daily")+
   geom_point() +
   geom_errorbar()
-
 
 #Logistic Regression
 
