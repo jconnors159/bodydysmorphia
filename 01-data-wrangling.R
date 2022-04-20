@@ -250,20 +250,39 @@ bdd_dummy <- dummyVars(BDD_Categories ~  Q14, data = bdd_k, fullRank = TRUE)
 source("KNN_Code.R")
 final_plot
 
-#set.seed(123)
-#fviz_nbclust(newdata, kmeans, method = "wss")
 
+# cluster analysis
+set.seed(123)
+demograph_data <- subset_bdd_data[,18:22] %>% rownames_to_column()
+newdata <- subset_bdd_data[,2:10]
+newdata <- newdata %>% mutate_if(is.character,as.factor)
+newdata <- one_hot(as.data.table(newdata))
+km <- kmeans(newdata, centers = 2)
+#km
 fviz_cluster(km, newdata, geom = "point")
 
-# compares clusters w/ boxplots
-#km$centers
-#table(demograph_data$Q22, km$cluster)
-#demograph_data$cluster <- km$cluster
-#demograph_data %>% count(Q22,cluster)
-#demograph_data %>% 
-  #ggplot(aes(x = Q22, y = BDD_Score)) + geom_boxplot() + 
-  #facet_wrap(~cluster)
-
-
-
-
+# # compares clusters w/ boxplots
+# km$centers
+# table(demograph_data$Q20, km$cluster)
+# demograph_data$cluster <- km$cluster
+# demograph_data %>% count(Q20,cluster)
+# demograph_data %>% 
+#   ggplot(aes(x = km$cluster, y = BDD_Score)) + geom_boxplot() + 
+#   facet_wrap(~cluster)
+# 
+# # more boxplot and kmeans analysis of cluster plot above
+# set.seed(123)
+# demograph_data_2 <- subset_bdd_data[,18:22] %>% rownames_to_column()
+# newdata_2 <- subset_bdd_data[,15]
+# newdata_2 <- newdata_2 %>% mutate_if(is.character,as.factor)
+# newdata_2 <- one_hot(as.data.table(newdata_2))
+# km <- kmeans(newdata_2, centers = 2)
+# km
+# fviz_cluster(km, newdata_2, geom = "text")
+# km$centers
+# table(demograph_data_2$Q20, km$cluster)
+# demograph_data_2$cluster <- km$cluster
+# demograph_data_2 %>% count(Q20,cluster)
+# demograph_data_2 %>% 
+#   ggplot(aes(x = km$cluster, y = BDD_Score)) + geom_boxplot() + 
+#   facet_wrap(~cluster)
