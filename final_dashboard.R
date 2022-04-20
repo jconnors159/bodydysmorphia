@@ -123,7 +123,7 @@ body <-   dashboardBody(
 
 
 
-ui <- dashboardPage(header, sidebar, body)
+ui <- dashboardPage(header, sidebar, body, skin = "purple")
 
 
 
