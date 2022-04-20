@@ -188,7 +188,6 @@ summary(bdd_linear_model_time)
 
 effect("Q14", bdd_linear_model_time) %>%
   data.frame() %>%
-#		   â¬change
   ggplot(aes(x = Q14,
              y = fit,
              ymin = lower,
