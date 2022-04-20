@@ -54,9 +54,6 @@ cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, Distri
 
 #view(cp_bdd_survey_data)
 
-#Hayli kNN code:
-
-
 #<<<<<<< HEAD
 # process of data exploration:
 #=======
@@ -226,7 +223,8 @@ newdata <- subset_bdd_data[,2:10]
 newdata <- newdata %>% mutate_if(is.character,as.factor)
 newdata <- one_hot(as.data.table(newdata))
 km <- kmeans(newdata, centers = 2)
-#Hayli KNN Code
+
+#Hayli KNN Code (Commit Test)
 set.seed(888)
 cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
