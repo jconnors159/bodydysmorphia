@@ -5,14 +5,13 @@ library(dplyr)
 library(ISLR)
 library(caret)
 library(ggplot2)
-
-
+library(e1071)
 library(mltools)
 library(data.table)
 library(cluster)
 library(ggplot2)
 library(factoextra)
-
+library(RANN)
 
 # read data in
 survey_data <- read_csv("social_media_033022.csv")
@@ -58,20 +57,22 @@ cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, Distri
 #Hayli kNN code:
 
 #Preprocessing data w/ one-hot encoding
-bdd_k <- bdd_survey_data
-bdd_dummy <- dummyVars(BDD_Score ~ ., data = bdd_k, fullRank = TRUE)
-
+set.seed(888)
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+bdd_k <- cp_bdd_survey_data
+bdd_dummy <- dummyVars(BDD_Categories ~  tiktok + youtube + instagram + facebook + snapchat + pinterest, data = bdd_k, fullRank = TRUE)
+source("KNN_Code.R")
+final_plot
+bdd_dummy <- dummyVars(BDD_Categories ~  Q3 + Q4 + Q5 + Q6 + Q7 + Q8 + Q9 + Q10 + Q11, data = bdd_k, fullRank = TRUE)
+source("KNN_Code.R")
+final_plot
 #<<<<<<< HEAD
 # process of data exploration:
 #=======
-bdd_k <- predict(bdd_dummy, newdata = bdd_k)
-bdd_k <- data.frame(bdd_k)
-#>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
-#Re-adding target variable (BDD_Score) to dataset bc dummyVars dropped it
-score_vals <- cp_bdd_survey_data %>%
-  select(BDD_Score)
-bdd_k <- cbind(bdd_k, score_vals)
+#>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
 #<<<<<<< HEAD
 # data columns of interest 
@@ -79,24 +80,8 @@ subset_bdd_data <-cp_bdd_survey_data %>%
   select (Q1:Q23_final, -c(Q23_modified, Q23))
 #view(subset_bdd_data)
 #=======
-#Training data
-bdd_split <- createDataPartition(bdd_k$BDD_Score, p = 0.8, list = FALSE)
-features_train <- bdd_k[bdd_split, !(names(bdd_k) %in% c('BDD_Score'))]
-features_test <- bdd_k[-bdd_split, !(names(bdd_k) %in% c('BDD_Score'))]
-target_train <- bdd_k[bdd_split, "BDD_Score"]
-target_test <- bdd_k[-bdd_split, "BDD_Score"]
-preprocess_object <- preProcess(features_train, 
-                                method = c('center', 'scale', 'knnImpute'))
-#>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
-features_train <- predict(preprocess_object, newdata = features_train)
-features_test <- predict(preprocess_object, newdata = features_test)
 
-#<<<<<<< HEAD
-#=======
-#Fitting kNN model 
-knn_fit <- knn3(features_train, target_train, k = 5)
-knn_pred <- predict(knn_fit, features_test, type = 'class' )
 #>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
 # exploring data Nate and Nizan 
