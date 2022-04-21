@@ -220,7 +220,7 @@ effect("Q20", log_model) %>%
   geom_col() +
   geom_label(aes(label = format(fit, digits = 2)))
 
-#Visualization of the results of log regression
+#Visualization of the results of log regression using a box&whisker plot b/c 3 vairables
 
 
 ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20)) +
