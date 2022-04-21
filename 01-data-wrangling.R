@@ -184,38 +184,58 @@ effect("Q14", bdd_linear_model_time) %>%
   geom_point() +
   geom_errorbar()
 
-#Logistic Regression
+#Jocelyn - Logistic Regression START -----------------------------------
 
-#adding a column 
+#Tidying data for logistic regression
 
 cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(Group = 
-           case_when(BDD_Score >= 30 ~ "1",
-                     BDD_Score < 30 ~ "0"))
-
+           case_when(BDD_Score >= 30 ~ 1,
+                     BDD_Score < 30 ~ 0))
 
 cp_bdd_survey_data <- cp_bdd_survey_data %>%
   rename(BDD_Binary = Group)
 
-#Changing the column from a character to numeric
-cp_bdd_survey_data$BDD_Binary <- as.numeric(as.character(cp_bdd_survey_data$BDD_Binary))
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Binary = ifelse(BDD_Score < 30,
+                             0, 1))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(
+    age = ifelse(Q20 == "18-20",
+                 "yes", "no")
+  )
+
+cp_bdd_survey_data %>%
+  count(age)
+#Logistic Regression Model
+log_model <- glm(BDD_Binary ~ Q20,
+                 data = cp_bdd_survey_data,
+                 family = "binomial")
+
+summary(log_model)
+
+#Visualization of the model to help see fit
 
 
-log_df <- select(cp_bdd_survey_data, BDD_Score,BDD_Binary)
-head(log_df)
+
+effect("Q20", log_model) %>%
+  data.frame() %>%
+  ggplot(aes(y = fit,
+             x = Q20)) +
+  geom_col() +
+  geom_label(aes(label = format(fit, digits = 2)))
+
+#Visualization of the results of log regression
 
 
-#bdd_log_model <- glm(BDD_Binary ~ tiktok + facebook + instagram + pinterest + youtube + snapchat,
-#               data = cp_bdd_survey_data)
-summary(bdd_log_model)
+ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20)) +
+  geom_boxplot(outlier.colour="red", outlier.shape=8,
+               outlier.size=4) +
+  coord_flip() +
+  stat_summary(fun=mean, geom="point", shape=23, size=4)
 
-#Created possibly the ugliest logistic reg graph I have ever seen. Sorry about that, help with making it prettier would be appreciated...
-ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=BDD_Binary)) + 
-  geom_point(alpha=.5) +
-  stat_smooth(method="glm", se=FALSE, method.args = list(family=binomial),
-              col="red", lty=2)
-
-
+# Jocelyn - Logistic Regression END ------------------------
 
 
 demograph_data <- subset_bdd_data[,18:22] %>% rownames_to_column()
