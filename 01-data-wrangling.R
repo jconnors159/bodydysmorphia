@@ -201,14 +201,7 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(BDD_Binary = ifelse(BDD_Score < 30,
                              0, 1))
 
-cp_bdd_survey_data <- cp_bdd_survey_data %>%
-  mutate(
-    age = ifelse(Q20 == "18-20",
-                 "yes", "no")
-  )
 
-cp_bdd_survey_data %>%
-  count(age)
 #Logistic Regression Model
 log_model <- glm(BDD_Binary ~ Q20,
                  data = cp_bdd_survey_data,
