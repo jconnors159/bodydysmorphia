@@ -5,14 +5,13 @@ library(dplyr)
 library(ISLR)
 library(caret)
 library(ggplot2)
-
-
+library(e1071)
 library(mltools)
 library(data.table)
 library(cluster)
 library(ggplot2)
 library(factoextra)
-
+library(RANN)
 
 # read data in
 survey_data <- read_csv("social_media_033022.csv")
@@ -55,44 +54,16 @@ cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, Distri
 
 #view(cp_bdd_survey_data)
 
-#Hayli kNN code:
-
-#Preprocessing data w/ one-hot encoding
-bdd_k <- bdd_survey_data
-bdd_dummy <- dummyVars(BDD_Score ~ ., data = bdd_k, fullRank = TRUE)
-
 #<<<<<<< HEAD
 # process of data exploration:
 #=======
-bdd_k <- predict(bdd_dummy, newdata = bdd_k)
-bdd_k <- data.frame(bdd_k)
-#>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
-#Re-adding target variable (BDD_Score) to dataset bc dummyVars dropped it
-score_vals <- cp_bdd_survey_data %>%
-  select(BDD_Score)
-bdd_k <- cbind(bdd_k, score_vals)
+#>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
 #<<<<<<< HEAD
 #=======
-#Training data
-bdd_split <- createDataPartition(bdd_k$BDD_Score, p = 0.8, list = FALSE)
-features_train <- bdd_k[bdd_split, !(names(bdd_k) %in% c('BDD_Score'))]
-features_test <- bdd_k[-bdd_split, !(names(bdd_k) %in% c('BDD_Score'))]
-target_train <- bdd_k[bdd_split, "BDD_Score"]
-target_test <- bdd_k[-bdd_split, "BDD_Score"]
-preprocess_object <- preProcess(features_train, 
-                                method = c('center', 'scale', 'knnImpute'))
-#>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
-features_train <- predict(preprocess_object, newdata = features_train)
-features_test <- predict(preprocess_object, newdata = features_test)
 
-#<<<<<<< HEAD
-#=======
-#Fitting kNN model 
-knn_fit <- knn3(features_train, target_train, k = 5)
-knn_pred <- predict(knn_fit, features_test, type = 'class' )
 #>>>>>>> 4b4a23376f977ff2ec8692cc93344c67b6fb3229
 
 
@@ -185,21 +156,33 @@ summary(bdd_linear_model)
 
 
 
-#To see different apps change the just change the name of the app within
-#the code below
+bdd_linear_model_gender <- lm(BDD_Score ~ Q22,
+                       data = cp_bdd_survey_data)
+
+bdd_linear_model_age <- lm(BDD_Score ~ Q20,
+                              data = cp_bdd_survey_data)
+
+bdd_linear_model_time <- lm(BDD_Score ~ Q14,
+                           data = cp_bdd_survey_data)
+
+summary(bdd_linear_model_gender)
+summary(bdd_linear_model_age)
+#time has a statistically significant t-score
+summary(bdd_linear_model_time)
 
 
-#       ⬇change
-effect("tiktok", bdd_linear_model) %>%
+
+effect("Q14", bdd_linear_model_time) %>%
   data.frame() %>%
-#		   ⬇change
-  ggplot(aes(x = tiktok,
+  ggplot(aes(x = Q14,
              y = fit,
              ymin = lower,
              ymax = upper)) +
+  xlab("Time Spent on Social Media per day")+
+  ylab("Average BDD Score")+
+  labs(title="Average BDD score based on hours spent on social media daily")+
   geom_point() +
   geom_errorbar()
-
 
 #Logistic Regression
 
@@ -241,20 +224,65 @@ newdata <- newdata %>% mutate_if(is.character,as.factor)
 newdata <- one_hot(as.data.table(newdata))
 km <- kmeans(newdata, centers = 2)
 
-#set.seed(123)
-#fviz_nbclust(newdata, kmeans, method = "wss")
+#Hayli KNN Code (Commit Test)
+set.seed(888)
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+bdd_k <- cp_bdd_survey_data
+bdd_dummy <- dummyVars(BDD_Categories ~  tiktok + youtube + instagram + facebook + snapchat + pinterest, data = bdd_k, fullRank = TRUE)
+source("KNN_Code.R")
+final_plot
 
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+bdd_k <- cp_bdd_survey_data
+bdd_dummy <- dummyVars(BDD_Categories ~  Q3 + Q4 + Q5 + Q6 + Q7 + Q8 + Q9 + Q10 + Q11, data = bdd_k, fullRank = TRUE)
+source("KNN_Code.R")
+final_plot
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+bdd_k <- cp_bdd_survey_data
+bdd_dummy <- dummyVars(BDD_Categories ~  Q14, data = bdd_k, fullRank = TRUE)
+source("KNN_Code.R")
+final_plot
+
+
+# cluster analysis
+set.seed(123)
+demograph_data <- subset_bdd_data[,18:22] %>% rownames_to_column()
+newdata <- subset_bdd_data[,2:10]
+newdata <- newdata %>% mutate_if(is.character,as.factor)
+newdata <- one_hot(as.data.table(newdata))
+km <- kmeans(newdata, centers = 2)
+#km
 fviz_cluster(km, newdata, geom = "point")
 
-# compares clusters w/ boxplots
-#km$centers
-#table(demograph_data$Q22, km$cluster)
-#demograph_data$cluster <- km$cluster
-#demograph_data %>% count(Q22,cluster)
-#demograph_data %>% 
-  #ggplot(aes(x = Q22, y = BDD_Score)) + geom_boxplot() + 
-  #facet_wrap(~cluster)
-
-
-
-
+# # compares clusters w/ boxplots
+# km$centers
+# table(demograph_data$Q20, km$cluster)
+# demograph_data$cluster <- km$cluster
+# demograph_data %>% count(Q20,cluster)
+# demograph_data %>% 
+#   ggplot(aes(x = km$cluster, y = BDD_Score)) + geom_boxplot() + 
+#   facet_wrap(~cluster)
+# 
+# # more boxplot and kmeans analysis of cluster plot above
+# set.seed(123)
+# demograph_data_2 <- subset_bdd_data[,18:22] %>% rownames_to_column()
+# newdata_2 <- subset_bdd_data[,15]
+# newdata_2 <- newdata_2 %>% mutate_if(is.character,as.factor)
+# newdata_2 <- one_hot(as.data.table(newdata_2))
+# km <- kmeans(newdata_2, centers = 2)
+# km
+# fviz_cluster(km, newdata_2, geom = "text")
+# km$centers
+# table(demograph_data_2$Q20, km$cluster)
+# demograph_data_2$cluster <- km$cluster
+# demograph_data_2 %>% count(Q20,cluster)
+# demograph_data_2 %>% 
+#   ggplot(aes(x = km$cluster, y = BDD_Score)) + geom_boxplot() + 
+#   facet_wrap(~cluster)
