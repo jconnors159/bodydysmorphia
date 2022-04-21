@@ -5,6 +5,14 @@ library(dplyr)
 library(ISLR)
 library(caret)
 library(ggplot2)
+library(e1071)
+library(mltools)
+library(data.table)
+library(cluster)
+library(ggplot2)
+library(factoextra)
+library(RANN)
+library(effects)
 library(shiny)
 library(shinydashboard)
 library(fontawesome)
@@ -23,11 +31,9 @@ survey_data_clean <- survey_data %>%
 #write_csv(survey_data_clean, "survey_data_clean.csv")
 bdd_survey_data <- read_csv("survey_data_clean.csv")
 
-# Nate's portion of cleaning:
 bdd_survey_data <- bdd_survey_data[-c(1,2),]
 bdd_survey_data <- filter(bdd_survey_data, Q1 != "I do not accept to participate in this research project")
 
-#Nizan Portion of Wrangling 
 cp_bdd_survey_data <- bdd_survey_data
 cp_bdd_survey_data <- cp_bdd_survey_data %>%
   filter(Q21 != "Graduate program") %>%  # took out graud program
@@ -39,17 +45,98 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
                                grepl("SHE", Q23_modified) ~ "she",
                                TRUE ~ "he"))
 
-#Jocelyn portion of Wrangling: # changed df you selected
 #cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, DistributionChannel, Progress, RecordedDate, Q_RecaptchaScore, Finished))
-
-# exploring data Nate and Nizan 
-summary(cp_bdd_survey_data)
-glimpse(cp_bdd_survey_data)
-
 # data columns of interest 
 subset_bdd_data <-cp_bdd_survey_data %>%
   select (Q1:Q23_final, -c(Q23_modified, Q23))
 #view(subset_bdd_data)
+
+# Cluster Analysis is all put in render plot's dashboard 
+#
+#
+
+
+#Jocelyn - Logistic Regression START -----------------------------------
+
+#Tidying data for logistic regression
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(Group = 
+           case_when(BDD_Score >= 30 ~ 1,
+                     BDD_Score < 30 ~ 0))
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  rename(BDD_Binary = Group)
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Binary = ifelse(BDD_Score < 30,
+                             0, 1))
+#Logistic Regression Model
+log_model <- glm(BDD_Binary ~ Q20,
+                 data = cp_bdd_survey_data,
+                 family = "binomial")
+
+#summary(log_model)
+#Visualization of the model to help see fit
+# In dashboard
+
+# Jocelyn - Logistic Regression END ------------------------
+
+
+#multiple linear regression
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(tiktok = ifelse(grepl("TikTok", Q15),
+                         "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(youtube = ifelse(grepl("YouTube", Q15),
+                          "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(instagram = ifelse(grepl("Instagram", Q15),
+                            "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(facebook = ifelse(grepl("Facebook", Q15),
+                           "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(snapchat = ifelse(grepl("Snapchat", Q15),
+                           "yes", "no"))
+
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(pinterest = ifelse(grepl("Pinterest", Q15),
+                            "yes", "no"))
+
+bdd_linear_model <- lm(BDD_Score ~ tiktok + facebook + instagram + pinterest + youtube + snapchat,
+                       data = cp_bdd_survey_data)
+bdd_linear_model_gender <- lm(BDD_Score ~ Q22,
+                              data = cp_bdd_survey_data)
+bdd_linear_model_age <- lm(BDD_Score ~ Q20,
+                           data = cp_bdd_survey_data)
+bdd_linear_model_time <- lm(BDD_Score ~ Q14,
+                            data = cp_bdd_survey_data)
+#time has a statistically significant t-score
+#summary(bdd_linear_model_time)
+
+
+#Hayli KNN Code (Commit Test)
+set.seed(888)
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+print(colnames(cp_bdd_survey_data))
+bdd_k <- cp_bdd_survey_data
+
+bdd_dummy <- dummyVars(BDD_Categories ~  tiktok + youtube + instagram + facebook + snapchat + pinterest, data = bdd_k, fullRank = TRUE)
+print((bdd_dummy))
+source("KNN_Code.R")
+kknplot1 <- final_plot
+
+
+
+
+
+
+
+
 
 
 
@@ -71,13 +158,12 @@ sidebar <- dashboardSidebar(
              menuSubItem("Multi-Linear Regression", tabName = "multilinear_regression"),
              menuSubItem("Logistic Regression", tabName = "logistic_regression"),
              menuSubItem("Cluster Analysis", tabName = "cluster_analysis"),
-             menuSubItem("kNN Analysis", tabName = "knn_analysis"),
-             menuSubItem("Histogram/Exploratory Data", tabName = "histogram")
+             menuSubItem("kNN Analysis", tabName = "knn_analysis"))
              
              
     )
   )
-)
+
 
 
 body <-   dashboardBody(
@@ -85,10 +171,18 @@ body <-   dashboardBody(
   tabItems(
     # page 1 ----
     tabItem(tabName = "Dashboard", "Dashboard content.",
-            fluidPage(
-              box(plotlyOutput("plot1")), # string name must match with sever 
-              box(plotlyOutput("plot2")),
-              box(plotlyOutput("plot3")))),
+                            box(h3("BDD Scores across Genders"),plotlyOutput("plot1"),
+                                HTML("<p>For the Shiny dashboard we will insert graphs into the statistical analysis portions:</p>
+<ul><li> Line of code where the graph is</li>
+<li>Summary and results of findings (will be placed underneath the graph) (paragraph) 
+Title of graph plot <>
+X, Y  label names you would like to include 
+Legend title (what your filter may be by </li></ul>
+")), # string name must match with sever 
+            HTML("<br>"),                
+            box(plotlyOutput("plot2")),
+                            box(plotlyOutput("plot3"))
+              ),
     
     # page 2 ----
     tabItem(tabName = "Widgets", "Widgets content.",
@@ -100,24 +194,25 @@ body <-   dashboardBody(
     # page 3 ----
     tabItem(tabName = "multilinear_regression",
             fluidRow(
-              #box(plotOutput("plot1", height = 250)),
+              box(plotOutput("multiplot")),
               h1("Multi-Linear Regression content."))),
     # page 4 ----
     tabItem(tabName = "logistic_regression",
             fluidRow(
-              h1("Logistic Regression content."))),
+              fluidPage(
+                box(plotOutput("log_sumplot")),  
+                box(plotOutput("log_boxplot")),
+              h1("Logistic Regression content.")))),
+    
     # page 5 ----
     tabItem(tabName = "cluster_analysis",
-            fluidRow(
+            fluidRow(box(plotOutput("clusterplot")),
               h1("Cluster Analysis content."))),
     # page 6 ----
     tabItem(tabName = "knn_analysis", 
-            fluidRow(
-              h1("kNN Analysis content."))),
-    # page 7 ----
-    tabItem(tabName = "histogram", 
-            fluidRow(
-              h1("Histogram/Exploratory Data content.")))
+            fluidPage(box(plotOutput("kkn1")),  
+              h1("kNN Analysis content.")))
+    
   )
 )
 
@@ -130,19 +225,20 @@ ui <- dashboardPage(header, sidebar, body, skin = "purple")
 
 server <- function(input, output, session) {
   
-  
+  # Exploring plot
   output$plot1 <-  renderPlotly({
     
     #Exploring data starts here:
     #creating histogram of BDD scores sep by pronouns
     # add labels and axis points 
     gplot1 <- cp_bdd_survey_data %>%
+      rename(Pronouns = Q23_final)%>%
       ggplot(aes(x= BDD_Score,
-                 color = Q23_final,
-                 fill = Q23_final))+
+                 color = Pronouns,
+                 fill = Pronouns))+
       geom_histogram(binwidth = 2, alpha= 0.5, position = "dodge")+
-      scale_color_brewer(palette="Set1")+ ggtitle("BDD Scores across Genders\n ")+
-      xlab("BDD Score")+ylab("Amount")+guides(fill=guide_legend("Gender Pronouns"))
+      scale_color_brewer(palette="Set1")+
+      xlab("BDD Score")+ylab("Amount")
     gplot1 <- ggplotly(gplot1)
   })
   
@@ -182,6 +278,60 @@ server <- function(input, output, session) {
       geom_boxplot()+coord_flip()+ggtitle("Topics explored on Social Media\n")+
       ylab("BDD Scores")+xlab("Entertainment")+guides(fill=guide_legend("Age group"))
     gplot3 <-ggplotly(gplot3)
+  })
+  
+  ## KNN plots 
+  
+  output$kkn1 <- renderPlot({
+    kknplot1
+  })
+  
+  
+  
+  # logistic plots 
+  output$log_sumplot <- renderPlot({
+    
+    effect("Q20", log_model) %>%
+      data.frame() %>%
+      ggplot(aes(y = fit,
+                 x = Q20)) +
+      geom_col() +
+      geom_label(aes(label = format(fit, digits = 2)))
+  })
+  output$log_boxplot <- renderPlot({  
+    ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20)) +
+      geom_boxplot(outlier.colour="red", outlier.shape=8,
+                   outlier.size=4) +
+      coord_flip() +
+      stat_summary(fun=mean, geom="point", shape=23, size=4)
+  })
+  
+  # clusterplot
+  output$clusterplot <- renderPlot({
+    set.seed(123)
+    demograph_data <- subset_bdd_data[,18:22] %>% rownames_to_column()
+    newdata <- subset_bdd_data[,2:10]
+    newdata <- newdata %>% mutate_if(is.character,as.factor)
+    newdata <- one_hot(as.data.table(newdata))
+    km <- kmeans(newdata, centers = 2)
+    #km
+    fviz_cluster(km, newdata, geom = "point")
+    })
+  
+  
+  # mulit linear or not plot ?
+  output$multiplot <- renderPlot({
+    effect("Q14", bdd_linear_model_time) %>%
+      data.frame() %>%
+      ggplot(aes(x = Q14,
+                 y = fit,
+                 ymin = lower,
+                 ymax = upper)) +
+      xlab("Time Spent on Social Media per day")+
+      ylab("Average BDD Score")+
+      labs(title="Average BDD score based on hours spent on social media daily")+
+      geom_point() +
+      geom_errorbar()
   })
   
   
