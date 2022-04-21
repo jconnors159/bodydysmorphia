@@ -183,7 +183,8 @@ effect("Q14", bdd_linear_model_time) %>%
   ylab("Average BDD Score")+
   labs(title="Average BDD score based on hours spent on social media daily")+
   geom_point() +
-  geom_errorbar()
+  geom_errorbar()+
+  scale_x_discrete(limits=c("<3 hrs/day", "3 - 10 hrs/day","10 - 20 hrs/day"))
 
 #Jocelyn - Logistic Regression START -----------------------------------
 
