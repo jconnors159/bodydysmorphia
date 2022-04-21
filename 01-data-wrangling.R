@@ -12,6 +12,7 @@ library(cluster)
 library(ggplot2)
 library(factoextra)
 library(RANN)
+library(effects)
 
 # read data in
 survey_data <- read_csv("social_media_033022.csv")
