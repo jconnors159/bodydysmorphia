@@ -1,6 +1,6 @@
 
 
-bdd_k <- predict(bdd_dummy, newdata = bdd_k)
+bdd_k <- predict(bdd_dummy, newdata = cp_bdd_survey_data)
 bdd_k <- data.frame(bdd_k)
 
 #Re-adding target variable (BDD_Score) to dataset bc dummyVars dropped it
