@@ -177,8 +177,8 @@ body <-   dashboardBody(
   tabItems(
     # page 1 ----
     tabItem(tabName = "Dashboard", "Dashboard content.",
-            fluidRow(
-                            box(width='100%',
+                                fluidRow(
+                                box(width='100%',
                                 h3("BDD Scores across Genders"),column(width = 12, plotlyOutput("plot1"),
                                 HTML("<p>For the Shiny dashboard we will insert graphs into the statistical analysis portions:</p>
                                       <ul><li> Line of code where the graph is</li>
@@ -186,12 +186,12 @@ body <-   dashboardBody(
                                       Title of graph plot <> X, Y  label names you would like to include 
                                       Legend title (what your filter may be by </li></ul>
 ")))), # string name must match with sever 
-            HTML("<br>"), 
-            fluidRow(
-            box(width='100%', 
-                h3("Class Standing across Social Media Platforms "), plotlyOutput("plot2"))),
-            fluidRow(
-                            box(width='100%',
+                                HTML("<br>"), 
+                                fluidRow(
+                                box(width='100%', 
+                                h3("Class Standing across Social Media Platforms "), plotlyOutput("plot2"))),
+                                fluidRow(
+                                box(width='100%',
                                 h3("Topics explored on Social Media"), plotlyOutput("plot3"))
               )),
     

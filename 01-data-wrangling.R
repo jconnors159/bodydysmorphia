@@ -277,7 +277,7 @@ newdata <- newdata %>% mutate_if(is.character,as.factor)
 newdata <- one_hot(as.data.table(newdata))
 km <- kmeans(newdata, centers = 2)
 #km
-fviz_cluster(km, newdata, geom = "point")
+fviz_cluster(km, newdata, geom = "point") + ggtitle(label = 'Cluster Analysis of Average BDD Scores')
 
 # # compares clusters w/ boxplots
 # km$centers
