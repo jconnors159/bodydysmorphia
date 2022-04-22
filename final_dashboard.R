@@ -423,7 +423,9 @@ server <- function(input, output, session) {
       xlab("Time Spent on Social Media per day")+
       ylab("Average BDD Score")+
       geom_point() +
-      geom_errorbar()
+      geom_errorbar()+
+      scale_x_discrete(limits=c("<3 hrs/day", "3 - 10 hrs/day","10 - 20 hrs/day"))
+
   })
   
   
