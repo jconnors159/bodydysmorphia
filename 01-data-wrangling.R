@@ -124,8 +124,8 @@ Q16_df%>%
 #Exploring data ends here:
 
 
-#multiple linear regression
-#
+# Nate ------------------------------------------------------ Start
+# multiple linear regression / linear regression
 cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(tiktok = ifelse(grepl("TikTok", Q15),
                          "yes", "no"))
