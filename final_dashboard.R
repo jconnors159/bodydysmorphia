@@ -182,7 +182,7 @@ body <-   dashboardBody(
                                 HTML("<br>"),
                                 HTML("<br>"),
                                 HTML("<p>“BDD Scores across Genders” is a histogram that looks at the distribution of BBD Scores by 
-                                personal pronouns (he, she, or they). The graph shows more of a binomial distribution of spread with 
+                                personal pronouns (he, she, or they). The graph shows more of a distribution with a wide range of spread with 
                                 one peak value demonstrated on the “she” pronouns with a score of 30.00. A peak from male-identified 
                                 pronouns had a score of 21.3. Lastly, the “they” pronouns with a score of 22.6.</p>
 ")))), # string name must match with sever 
@@ -332,12 +332,15 @@ server <- function(input, output, session) {
     new_frame <-subset_bdd_data %>% separate_rows(Q13) %>% 
       group_by(Q21,BDD_Score,Q13) %>% mutate(count =n())
     
+    positions <- c("Freshman", "Sophomore", "Junior","Senior")
+    
     gplot2 <- new_frame %>%
       filter(Q21 != "Other")%>%
       ggplot(aes( x = Q21,
                   fill = Q13))+
       geom_bar()+
-      xlab("Class Standing")+ylab("Amount")+guides(fill=guide_legend("Social Media")) #+
+      xlab("Class Standing")+ylab("Amount")+guides(fill=guide_legend("Social Media"))+ 
+      scale_x_discrete(limits = positions) #+
     #facet_wrap(~Q13, scales = "free_y") +
     #labs(caption = "note that the scale differs across subplots")
     #scale_color_brewer(palette="Set2")# ask adrianna on how to convert to bar
