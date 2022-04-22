@@ -161,7 +161,7 @@ sidebar <- dashboardSidebar(
     
     
     menuItem("Statistical Analysis", tabName = "statistical_analysis", 
-             menuSubItem("Multi-Linear Regression", tabName = "multilinear_regression"),
+             menuSubItem("Linear Regression", tabName = "linear_regression"),
              menuSubItem("Logistic Regression", tabName = "logistic_regression"),
              menuSubItem("Cluster Analysis", tabName = "cluster_analysis"),
              menuSubItem("kNN Analysis", tabName = "knn_analysis"))
@@ -185,8 +185,8 @@ body <-   dashboardBody(
                                       Legend title (what your filter may be by </li></ul>
 ")), # string name must match with sever 
             HTML("<br>"),                
-            box(plotlyOutput("plot2")),
-                            box(plotlyOutput("plot3"))
+            box(h3("Class Standing across Social Media Platforms "), plotlyOutput("plot2")),
+                            box(h3("Topics explored on Social Media"), plotlyOutput("plot3"))
               ),
     
     # page 2 ----
@@ -197,26 +197,26 @@ body <-   dashboardBody(
     
     
     # page 3 ----
-    tabItem(tabName = "multilinear_regression",
-            fluidRow(
+    tabItem(tabName = "linear_regression",
+            fluidRow(h3("Average BDD score based on hours spent on social media daily"),
               box(plotOutput("multiplot")),
-              h1("Multi-Linear Regression content."))),
+              h1("Linear Regression content."))),
     # page 4 ----
     tabItem(tabName = "logistic_regression",
             fluidRow(
               fluidPage(
-                box(plotOutput("log_sumplot")),  
-                box(plotOutput("log_boxplot")),
+                box(h3(" “Average BDD Score Based on Age Range”"),plotOutput("log_boxplot")),  
+                box(h3("“Probability of Age Influencing BDD Score”"), plotOutput("log_sumplot")),
               h1("Logistic Regression content.")))),
     
     # page 5 ----
     tabItem(tabName = "cluster_analysis",
-            fluidRow(box(plotOutput("clusterplot")),
+            fluidRow(box(h3("Cluster Analysis of Average BDD Scores"),plotOutput("clusterplot")),
               h1("Cluster Analysis content."))),
     # page 6 ----
     tabItem(tabName = "knn_analysis", 
-            fluidRow(box(plotOutput("kkn1")),
-            fluidRow(box(plotOutput("kkn2")),
+            fluidRow(box(h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1")),
+            fluidRow(box(h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2")),
             h1("kNN Analysis content."))))
     
   )
@@ -262,7 +262,7 @@ server <- function(input, output, session) {
       filter(Q21 != "Other")%>%
       ggplot(aes( x = Q21,
                   fill = Q13))+
-      geom_bar()+ ggtitle("Class Standing across Social Media Platforms ")+
+      geom_bar()+
       xlab("Class Standing")+ylab("Amount")+guides(fill=guide_legend("Social Media")) #+
     #facet_wrap(~Q13, scales = "free_y") +
     #labs(caption = "note that the scale differs across subplots")
@@ -281,7 +281,7 @@ server <- function(input, output, session) {
     
     gplot3 <- Q16_df%>%
       ggplot(aes(x = Q16_final, y = BDD_Score, fill= Q20))+
-      geom_boxplot()+coord_flip()+ggtitle("Topics explored on Social Media\n")+
+      geom_boxplot()+coord_flip()+
       ylab("BDD Scores")+xlab("Entertainment")+guides(fill=guide_legend("Age group"))
     gplot3 <-ggplotly(gplot3)
   })
@@ -337,7 +337,6 @@ server <- function(input, output, session) {
                  ymax = upper)) +
       xlab("Time Spent on Social Media per day")+
       ylab("Average BDD Score")+
-      labs(title="Average BDD score based on hours spent on social media daily")+
       geom_point() +
       geom_errorbar()
   })
