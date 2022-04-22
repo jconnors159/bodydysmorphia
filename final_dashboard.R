@@ -208,7 +208,7 @@ body <-   dashboardBody(
                                 HTML("<p>“Topics Explored on Social Media” showcases the BDD scores' distribution across different 
                                      entertainment sources explored on social media. This is indexed by the Age group. There is a 
                                      higher shift of scores in the Technology/Smartphone section in the age group range of 18-20  
-                                     versus the 25+ age range showing a higher distribution in the topic of Celebrities.  <p>"),
+                                     versus the 25+ age range showing a higher distribution in the topic of Celebrities.  <p>"), style = "font-size:17px",
                                 HTML("<br>"))
               )))),
 
