@@ -365,7 +365,7 @@ server <- function(input, output, session) {
     
     
     gplot3 <- Q16_df%>%
-      ggplot(aes(x =reorder(Q16, Q20 ), y = BDD_Score, fill= Q20))+
+      ggplot(aes(x = Q16, y = BDD_Score, fill= Q20))+
       geom_boxplot()+coord_flip()+
       ylab("BDD Scores")+xlab("Entertainment")+guides(fill=guide_legend("Age group"))
     gplot3 <-ggplotly(gplot3)
