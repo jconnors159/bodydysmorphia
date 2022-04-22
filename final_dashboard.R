@@ -236,7 +236,7 @@ body <-   dashboardBody(
     tabItem(tabName = "logistic_regression",
             fluidPage(
               fluidRow( column(12, 
-                box(width='12',h3(" “Average BDD Score Based on Age Range”"),plotOutput("log_boxplot"),
+                box(width='12',h3("Average BDD Score Based on Age Range"),plotOutput("log_boxplot"),
                     HTML("<br>"),
                     HTML("<br>"),
                     HTML("<p>The purpose of the first graph is to show the average BDD Score based on each of the three age 
@@ -250,7 +250,7 @@ body <-   dashboardBody(
                 HTML("<br>"),
                 HTML("<br>"),
                 fluidRow( column(12, 
-                  box(width='12',h3("“Probability of Age Influencing BDD Score”"), plotOutput("log_sumplot"),
+                  box(width='12',h3("Probability of Age Influencing BDD Score"), plotOutput("log_sumplot"),
                     HTML("<br>"),
                     HTML("<p>This is further proven by looking at the second graph (Probability of Age Influencing BDD Score) 
                         and viewing how each age range has a probability of having an effect on the BDD Score. The effect, or fit, 
