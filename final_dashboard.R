@@ -204,26 +204,60 @@ body <-   dashboardBody(
     
     # page 3 ----
     tabItem(tabName = "linear_regression",
-            fluidRow(h3("Average BDD score based on hours spent on social media daily"),
-              box(plotOutput("multiplot")),
-              h1("Linear Regression content."))),
+              h1("Linear Regression content."),
+              fluidRow(h3("Average BDD score based on hours spent on social media daily"),
+              box(width='100%',plotOutput("multiplot")),
+              )),
     # page 4 ----
     tabItem(tabName = "logistic_regression",
+            h1("Logistic Regression content."),
             fluidRow(
               fluidPage(
-                box(h3(" “Average BDD Score Based on Age Range”"),plotOutput("log_boxplot")),  
-                box(h3("“Probability of Age Influencing BDD Score”"), plotOutput("log_sumplot")),
-              h1("Logistic Regression content.")))),
+                box(width='100%',h3(" “Average BDD Score Based on Age Range”"),plotOutput("log_boxplot")), 
+                HTML("<p>The purpose of the first graph is to show the average BDD Score based on each of the three age 
+                ranges and if someone in the younger adult age (18-20) range would have a higher score than someone in one 
+                of the two other ranges (21-24 or 25+). The only significant p-value among all variables was 18-20, which had 
+                a p-value of 0.01. This means that there is some correlation between this age group and BDD Scores, but more 
+                correlation compared to the age groupings. The p-value of 21-24 was 0.73 and 25+ was 0.69. There is insufficient 
+                evidence to conclude that a relationship exists between the two older age groupings and their effect on the BDD Score. 
+                <p>"),
+                HTML("<br>"),
+                box(width='100%',h3("“Probability of Age Influencing BDD Score”"), plotOutput("log_sumplot")),
+                HTML("<p>This is further proven by looking at the second graph (Probability of Age Influencing BDD Score) 
+                and viewing how each age range has a probability of having an effect on the BDD Score. The effect, or fit, 
+                in this instance is the predicted values given by the logistic regression model. What this means for the plot 
+                above, is that the predicted values (0.34, 0.31, and 0.39) are given based on the outcome, the outcome being 
+                the independent variables (18-20, 21-24, and 25+). The predicted values show the probability of there being an 
+                effect of age on BDD Scores is fairly low for each variable. They all equal about 0.35 on average. 
+                <p>")
+              ))),
     
     # page 5 ----
     tabItem(tabName = "cluster_analysis",
-            fluidRow(box(h3("Cluster Analysis of Average BDD Scores"),plotOutput("clusterplot")),
-              h1("Cluster Analysis content."))),
+            h1("Cluster Analysis content."),
+            fluidRow(box(width='100%', h3("Cluster Analysis of Average BDD Scores"),plotOutput("clusterplot"))
+              )),
     # page 6 ----
     tabItem(tabName = "knn_analysis", 
-            fluidRow(box(h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1")),
-            fluidRow(box(h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2")),
-            h1("kNN Analysis content."))))
+            h1("kNN Analysis content."),
+            fluidRow(box(width='100%',h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1")),
+                     HTML("<p> With all social media platform options (TikTok, YouTube, Instagram, Facebook, 
+                         Snapchat, Pinterest) selected as features, KNN analysis shows that the platform an individual 
+                         uses doesn’t have a significant impact on BDD score. While the algorithm correctly predicted 11 
+                         high scores as high, 8 low scores were incorrectly classified as high. 5 high scores were incorrectly 
+                         predicted to be low. Only 3 low scores were predicted correctly by the KNN algorithm. This shows that 
+                         the algorithm overdiagnosed many as having a high BDD score when they in fact did not. <p>"),
+                     HTML("<br>"),
+            fluidRow(box(width='100%',h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2"),
+                    HTML("<p> With all of the BDD-score-determining questions selected as features, KNN much 
+                        more accurately predicts the scores of participants. This, of course, is to be expected. 
+                        15 actual high scores are correctly predicted to be high while only one was incorrectly 
+                        predicted to be low. Meanwhile, 8 low scores were correctly predicted as low while 3 were 
+                        incorrectly predicted as high. While there is still a trend of overdiagnosing low scores as 
+                        high, we see a more accurate analysis made by the KNN algorithm when taking into account BDD 
+                        Test questions.</p>
+                                      
+")))))
     
   )
 )
