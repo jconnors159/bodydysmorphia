@@ -179,8 +179,8 @@ body <-   dashboardBody(
   tabItems(
     # page 1 ----
     tabItem(tabName = "Dashboard",fluidPage(
-                                fluidRow( column(12,
-                                box(width = '12',
+                                fluidRow( column(11,
+                                box(width = '11',
                                 h3("BDD Scores Across Genders"), plotlyOutput("plot1"),
                                 HTML("<br>"),
                                 HTML("<br>"),
@@ -190,8 +190,8 @@ body <-   dashboardBody(
                                 pronouns had a score of 21.3. Lastly, the “they” pronouns with a score of 22.6.</p>
 ")))), # string name must match with sever 
                                 HTML("<br>"), 
-                                fluidRow(column(12, 
-                                box(width = '12', 
+                                fluidRow(column(11, 
+                                box(width = '11', 
                                 h3("Class Standing Across Social Media Platforms "), plotlyOutput("plot2"),
                                 HTML("<br>"),
                                 HTML("<br>"),
@@ -200,15 +200,15 @@ body <-   dashboardBody(
                                      be used in further analysis. Overall, the graph shows that Instagram is the most used application 
                                      among Freshmen, Sophomores, and Juniors, with Seniors being the only exception of having a higher 
                                      count on YouTube.<p>")))),
-                                fluidRow(column(12,
-                                box(width = '12',
+                                fluidRow(column(11,
+                                box(width = '11',
                                 h3("Topics Explored on Social Media"), plotlyOutput("plot3"),
                                 HTML("<br>"),
                                 HTML("<br>"),
                                 HTML("<p>“Topics Explored on Social Media” showcases the BDD scores' distribution across different 
                                      entertainment sources explored on social media. This is indexed by the Age group. There is a 
                                      higher shift of scores in the Technology/Smartphone section in the age group range of 18-20  
-                                     versus the 25+ age range showing a higher distribution in the topic of Celebrities.  <p>"), style = "font-size:17px",
+                                     versus the 25+ age range showing a higher distribution in the topic of Celebrities.  <p>"), style = "font-size:16px",
                                 HTML("<br>"))
               )))),
 
@@ -216,8 +216,8 @@ body <-   dashboardBody(
     
     # page 3 ----
     tabItem(tabName = "linear_regression",
-              fluidRow(column(12,
-              box( width = "12",
+              fluidRow(column(11,
+              box( width = "11",
                   h3("Average BDD Score Based on Hours Spent on Social Media Daily"), plotOutput("multiplot"),
                   HTML("<br>"),
                   HTML("<br>"),
@@ -235,8 +235,8 @@ body <-   dashboardBody(
     # page 4 ----
     tabItem(tabName = "logistic_regression",
             fluidPage(
-              fluidRow( column(12, 
-                box(width='12',h3("Average BDD Score Based on Age Range"),plotOutput("log_boxplot"),
+              fluidRow( column(11, 
+                box(width='11',h3("Average BDD Score Based on Age Range"),plotOutput("log_boxplot"),
                     HTML("<br>"),
                     HTML("<br>"),
                     HTML("<p>The purpose of the first graph is to show the average BDD Score based on each of the three age 
@@ -249,8 +249,8 @@ body <-   dashboardBody(
 
                 HTML("<br>"),
                 HTML("<br>"),
-                fluidRow( column(12, 
-                  box(width='12',h3("Probability of Age Influencing BDD Score"), plotOutput("log_sumplot"),
+                fluidRow( column(11, 
+                  box(width='11',h3("Probability of Age Influencing BDD Score"), plotOutput("log_sumplot"),
                     HTML("<br>"),
                     HTML("<p>This is further proven by looking at the second graph (Probability of Age Influencing BDD Score) 
                         and viewing how each age range has a probability of having an effect on the BDD Score. The effect, or fit, 
@@ -264,8 +264,8 @@ body <-   dashboardBody(
     
     # page 5 ----
     tabItem(tabName = "cluster_analysis",
-            fluidRow( column(12,
-              box(width='12', h3("Cluster Analysis of Average BDD Scores"),plotOutput("clusterplot"), 
+            fluidRow( column(11,
+              box(width='11', h3("Cluster Analysis of Average BDD Scores"),plotOutput("clusterplot"), 
                          HTML("<br>"),
                          HTML("<br>"),
                          HTML("<p>This model breaks the data into two clusters, or groups, where the first cluster consists of 
@@ -278,8 +278,8 @@ body <-   dashboardBody(
     # page 6 ----
     tabItem(tabName = "knn_analysis", 
             fluidPage(
-              fluidRow( column(12,
-                         box( width = "12",h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1"),
+              fluidRow( column(11,
+                         box( width = "11",h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1"),
                          HTML("<br>"),
                          HTML("<br>"),
                          HTML("<p> With all social media platform options (TikTok, YouTube, Instagram, Facebook, 
@@ -289,8 +289,8 @@ body <-   dashboardBody(
                              predicted to be low. Only 3 low scores were predicted correctly by the KNN algorithm. This shows that 
                              the algorithm overdiagnosed many as having a high BDD score when they in fact did not. <p>")))),
                      HTML("<br>"),
-            fluidRow( column(12,
-                      box(width = "12", h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2"),
+            fluidRow( column(11,
+                      box(width = "11", h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2"),
                              HTML("<br>"),
                              HTML("<br>"),
                              HTML("<p> With all of the BDD-score-determining questions selected as features, KNN much 
