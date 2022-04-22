@@ -130,7 +130,13 @@ print((bdd_dummy))
 source("KNN_Code.R")
 kknplot1 <- final_plot
 
-
+cp_bdd_survey_data <- cp_bdd_survey_data %>%
+  mutate(BDD_Categories = case_when(BDD_Score < 20 ~ "low",
+                                    BDD_Score >= 20 ~ "high"))
+bdd_k <- cp_bdd_survey_data
+bdd_dummy <- dummyVars(BDD_Categories ~  Q3 + Q4 + Q5 + Q6 + Q7 + Q8 + Q9 + Q10 + Q11, data = bdd_k, fullRank = TRUE)
+source("KNN_Code.R")
+kknplot2 <-final_plot
 
 
 
@@ -173,11 +179,10 @@ body <-   dashboardBody(
     tabItem(tabName = "Dashboard", "Dashboard content.",
                             box(h3("BDD Scores across Genders"),plotlyOutput("plot1"),
                                 HTML("<p>For the Shiny dashboard we will insert graphs into the statistical analysis portions:</p>
-<ul><li> Line of code where the graph is</li>
-<li>Summary and results of findings (will be placed underneath the graph) (paragraph) 
-Title of graph plot <>
-X, Y  label names you would like to include 
-Legend title (what your filter may be by </li></ul>
+                                      <ul><li> Line of code where the graph is</li>
+                                      <li>Summary and results of findings (will be placed underneath the graph) (paragraph) 
+                                      Title of graph plot <> X, Y  label names you would like to include 
+                                      Legend title (what your filter may be by </li></ul>
 ")), # string name must match with sever 
             HTML("<br>"),                
             box(plotlyOutput("plot2")),
@@ -210,8 +215,9 @@ Legend title (what your filter may be by </li></ul>
               h1("Cluster Analysis content."))),
     # page 6 ----
     tabItem(tabName = "knn_analysis", 
-            fluidPage(box(plotOutput("kkn1")),  
-              h1("kNN Analysis content.")))
+            fluidRow(box(plotOutput("kkn1")),
+            fluidRow(box(plotOutput("kkn2")),
+            h1("kNN Analysis content."))))
     
   )
 )
@@ -285,7 +291,9 @@ server <- function(input, output, session) {
   output$kkn1 <- renderPlot({
     kknplot1
   })
-  
+  output$kkn2 <- renderPlot({
+    kknplot2
+  })
   
   
   # logistic plots 
