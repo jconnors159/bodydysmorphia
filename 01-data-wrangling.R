@@ -45,9 +45,9 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(Q23_modified = str_replace_all(Q23, ",", "/"))%>%
   mutate(Q23_modified = str_replace_all(Q23, "/(\\s)\1", "/"))%>%  #issue 1
   mutate(Q23_modified = toupper(Q23_modified)) %>%
-  mutate(Q23_final = case_when(grepl("THEY", Q23_modified) ~ "they",
-                             grepl("SHE", Q23_modified) ~ "she",
-                             TRUE ~ "he"))
+  mutate(Q23_final = case_when(grepl("THEY", Q23_modified) ~ "They",
+                             grepl("SHE", Q23_modified) ~ "She",
+                             TRUE ~ "He"))
 #cp_bdd_survey_data %>% count(Q23_final, Q23_modified) %>% view()
 
 #Jocelyn portion of Wrangling: # changed df you selected
@@ -113,8 +113,13 @@ geom_bar()
   
 
 #Q16 topics of usage box plot by age # needs work how show interactively by age group 
+subset_bdd_data <- subset_bdd_data%>%
+  separate_rows(Q16)
+
 Q16_df <- subset_bdd_data%>%
-  separate_rows(Q16)%>%group_by(Q16,BDD_Score,Q20)%>%mutate(count =n())%>%
+  mutate(Q16 = str_to_title(Q16))%>%
+  filter(Q16 != "And" & Q16 !="Topics" & Q16 != "Related" & Q16 != "Video", Q16 != "Body")%>%
+  group_by(Q16,BDD_Score,Q20)%>%mutate(count =n())%>%
   mutate(Percentage=paste0(round(count/sum(count)*100,2),"%"))
 
 Q16_df%>%

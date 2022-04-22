@@ -41,14 +41,17 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(Q23_modified = str_replace_all(Q23, ",", "/"))%>%
   mutate(Q23_modified = str_replace_all(Q23, "/(\\s)\1", "/"))%>%  #issue 1
   mutate(Q23_modified = toupper(Q23_modified)) %>%
-  mutate(Q23_final = case_when(grepl("THEY", Q23_modified) ~ "they",
-                               grepl("SHE", Q23_modified) ~ "she",
-                               TRUE ~ "he"))
+  mutate(Q23_final = case_when(grepl("THEY", Q23_modified) ~ "They",
+                               grepl("SHE", Q23_modified) ~ "She",
+                               TRUE ~ "He"))
 
 #cp_bdd_survey_data <- select(cp_bdd_survey_data, -c(Status, UserLanguage, DistributionChannel, Progress, RecordedDate, Q_RecaptchaScore, Finished))
 # data columns of interest 
 subset_bdd_data <-cp_bdd_survey_data %>%
   select (Q1:Q23_final, -c(Q23_modified, Q23))
+subset_bdd_data <- subset_bdd_data%>%
+  separate_rows(Q16)
+
 #view(subset_bdd_data)
 
 # Cluster Analysis is all put in render plot's dashboard 
@@ -346,24 +349,23 @@ server <- function(input, output, session) {
                   fill = Q13))+
       geom_bar()+
       xlab("Class Standing")+ylab("Amount")+guides(fill=guide_legend("Social Media"))+ 
-      scale_x_discrete(limits = positions) #+
-    #facet_wrap(~Q13, scales = "free_y") +
-    #labs(caption = "note that the scale differs across subplots")
-    #scale_color_brewer(palette="Set2")# ask adrianna on how to convert to bar
+      scale_x_discrete(limits = positions)
     gplot2 <-ggplotly(gplot2)
   })
   
   output$plot3 <-renderPlotly({
     
     #Q16 topics of usage box plot by age # needs work how show interactively by age group 
+    
     Q16_df <- subset_bdd_data%>%
-      mutate(Q16_final = str_replace_all(Q16, ".(topics).",""))%>%
-      mutate(Q16_final = str_replace_all(Q16,".(and).", ""))%>%
-      separate_rows(Q16_final)%>%group_by(Q16_final,BDD_Score,Q20)%>%mutate(count =n())%>%
+      mutate(Q16 = str_to_title(Q16))%>%
+      filter(Q16 != "And" & Q16 !="Topics" & Q16 != "Related" & Q16 != "Video", Q16 != "Body")%>%
+      group_by(Q16,BDD_Score,Q20)%>%mutate(count =n())%>%
       mutate(Percentage=paste0(round(count/sum(count)*100,2),"%"))
     
+    
     gplot3 <- Q16_df%>%
-      ggplot(aes(x = Q16_final, y = BDD_Score, fill= Q20))+
+      ggplot(aes(x =reorder(Q16, Q20 ), y = BDD_Score, fill= Q20))+
       geom_boxplot()+coord_flip()+
       ylab("BDD Scores")+xlab("Entertainment")+guides(fill=guide_legend("Age group"))
     gplot3 <-ggplotly(gplot3)
