@@ -125,6 +125,7 @@ Q16_df%>%
 
 
 #multiple linear regression
+#
 cp_bdd_survey_data <- cp_bdd_survey_data %>%
   mutate(tiktok = ifelse(grepl("TikTok", Q15),
                          "yes", "no"))
@@ -150,7 +151,8 @@ cp_bdd_survey_data <- cp_bdd_survey_data %>%
                          "yes", "no"))
 
 
-
+#Regresson comparing bdd_scores to choice of social media. No statistically signicant values with an r-squared of .02
+#indicating there is no relationship between social media and bdd_score
 bdd_linear_model <- lm(BDD_Score ~ tiktok + facebook + instagram + pinterest + youtube + snapchat,
                     data = cp_bdd_survey_data)
 summary(bdd_linear_model)
