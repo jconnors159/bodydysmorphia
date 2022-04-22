@@ -209,6 +209,16 @@ log_model <- glm(BDD_Binary ~ Q20,
 
 summary(log_model)
 
+
+#Visualization of the results of log regression using a box&whisker plot b/c 3 vairables
+
+
+ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20)) +
+  geom_boxplot(outlier.colour="red", outlier.shape=8,
+               outlier.size=4) +
+  coord_flip() +
+  stat_summary(fun=mean, geom="point", shape=23, size=4)
+
 #Visualization of the model to help see fit
 
 
@@ -220,14 +230,7 @@ effect("Q20", log_model) %>%
   geom_col() +
   geom_label(aes(label = format(fit, digits = 2)))
 
-#Visualization of the results of log regression using a box&whisker plot b/c 3 vairables
 
-
-ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20)) +
-  geom_boxplot(outlier.colour="red", outlier.shape=8,
-               outlier.size=4) +
-  coord_flip() +
-  stat_summary(fun=mean, geom="point", shape=23, size=4)
 
 # Jocelyn - Logistic Regression END ------------------------
 
