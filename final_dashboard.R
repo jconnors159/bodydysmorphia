@@ -180,6 +180,7 @@ body <-   dashboardBody(
                                 box(width='50%',
                                 h3("BDD Scores Across Genders"),column(width = 12, plotlyOutput("plot1"),
                                 HTML("<br>"),
+                                HTML("<br>"),
                                 HTML("<p>“BDD Scores across Genders” is a histogram that looks at the distribution of BBD Scores by 
                                 personal pronouns (he, she, or they). The graph shows more of a binomial distribution of spread with 
                                 one peak value demonstrated on the “she” pronouns with a score of 30.00. A peak from male-identified 
@@ -190,6 +191,7 @@ body <-   dashboardBody(
                                 box(width='50%', 
                                 h3("Class Standing Across Social Media Platforms "), plotlyOutput("plot2"),
                                 HTML("<br>"),
+                                HTML("<br>"),
                                 HTML("<p>“Class Standing across Social Media Platforms” identifies what each class standing utilizes, 
                                      as well as what platform, and opens the question of interest on what social media platforms should 
                                      be used in further analysis. Overall, the graph shows that Instagram is the most used application 
@@ -198,6 +200,7 @@ body <-   dashboardBody(
                                 fluidRow(
                                 box(width='100%',
                                 h3("Topics Explored on Social Media"), plotlyOutput("plot3"),
+                                HTML("<br>"),
                                 HTML("<br>"),
                                 HTML("<p>“Topics Explored on Social Media” showcases the BDD scores' distribution across different 
                                      entertainment sources explored on social media. This is indexed by the Age group. There is a 
@@ -211,6 +214,7 @@ body <-   dashboardBody(
     tabItem(tabName = "linear_regression",
               fluidRow(h3("Average BDD Score Based on Hours Spent on Social Media Daily"),
               box(width='100%',plotOutput("multiplot"),
+                  HTML("<br>"),
                   HTML("<br>"),
                   HTML("<p> This graph shows the average BDD score of the participants of the survey based on how much time 
                   they spend on social media daily. There were three given options on the question, less than 3 hours/day, 
@@ -229,6 +233,7 @@ body <-   dashboardBody(
               fluidPage(
                 box(width='100%',h3(" “Average BDD Score Based on Age Range”"),plotOutput("log_boxplot"),
                     HTML("<br>"),
+                    HTML("<br>"),
                     HTML("<p>The purpose of the first graph is to show the average BDD Score based on each of the three age 
                         ranges and if someone in the younger adult age (18-20) range would have a higher score than someone in one 
                         of the two other ranges (21-24 or 25+). The only significant p-value among all variables was 18-20, which had 
@@ -237,6 +242,7 @@ body <-   dashboardBody(
                         evidence to conclude that a relationship exists between the two older age groupings and their effect on the BDD Score. 
                         <p>")),
 
+                HTML("<br>"),
                 HTML("<br>"),
                 box(width='100%',h3("“Probability of Age Influencing BDD Score”"), plotOutput("log_sumplot"),
                     HTML("<br>"),
@@ -254,6 +260,7 @@ body <-   dashboardBody(
     tabItem(tabName = "cluster_analysis",
             fluidRow(box(width='100%', h3("Cluster Analysis of Average BDD Scores"),plotOutput("clusterplot"), 
                          HTML("<br>"),
+                         HTML("<br>"),
                          HTML("<p>This model breaks the data into two clusters, or groups, where the first cluster consists of 
                          74 people who took the survey and the second cluster consists of 62 people. This plot shows that the people 
                          in cluster 1 have, on average, a higher BDD score than those in cluster 2. These are individuals who not only 
@@ -265,6 +272,7 @@ body <-   dashboardBody(
     tabItem(tabName = "knn_analysis", 
             fluidRow(box(width='20%',h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1"),
                          HTML("<br>"),
+                         HTML("<br>"),
                          HTML("<p> With all social media platform options (TikTok, YouTube, Instagram, Facebook, 
                              Snapchat, Pinterest) selected as features, KNN analysis shows that the platform an individual 
                              uses doesn’t have a significant impact on BDD score. While the algorithm correctly predicted 11 
@@ -273,6 +281,7 @@ body <-   dashboardBody(
                              the algorithm overdiagnosed many as having a high BDD score when they in fact did not. <p>")),
                      HTML("<br>"),
             fluidRow(box(width='20%',h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2"),
+                             HTML("<br>"),
                              HTML("<br>"),
                              HTML("<p> With all of the BDD-score-determining questions selected as features, KNN much 
                                  more accurately predicts the scores of participants. This, of course, is to be expected. 
