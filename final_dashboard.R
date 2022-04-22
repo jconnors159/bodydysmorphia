@@ -178,7 +178,7 @@ body <-   dashboardBody(
     # page 1 ----
     tabItem(tabName = "Dashboard", "Dashboard content.",
                                 fluidRow(
-                                box(width='100%',
+                                box(width='50%',
                                 h3("BDD Scores across Genders"),column(width = 12, plotlyOutput("plot1"),
                                 HTML("<p>For the Shiny dashboard we will insert graphs into the statistical analysis portions:</p>
                                       <ul><li> Line of code where the graph is</li>
@@ -188,7 +188,7 @@ body <-   dashboardBody(
 ")))), # string name must match with sever 
                                 HTML("<br>"), 
                                 fluidRow(
-                                box(width='100%', 
+                                box(width='50%', 
                                 h3("Class Standing across Social Media Platforms "), plotlyOutput("plot2"))),
                                 fluidRow(
                                 box(width='100%',
@@ -240,22 +240,22 @@ body <-   dashboardBody(
     # page 6 ----
     tabItem(tabName = "knn_analysis", 
             h1("kNN Analysis content."),
-            fluidRow(box(width='100%',h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1")),
-                     HTML("<p> With all social media platform options (TikTok, YouTube, Instagram, Facebook, 
-                         Snapchat, Pinterest) selected as features, KNN analysis shows that the platform an individual 
-                         uses doesn’t have a significant impact on BDD score. While the algorithm correctly predicted 11 
-                         high scores as high, 8 low scores were incorrectly classified as high. 5 high scores were incorrectly 
-                         predicted to be low. Only 3 low scores were predicted correctly by the KNN algorithm. This shows that 
-                         the algorithm overdiagnosed many as having a high BDD score when they in fact did not. <p>"),
+            fluidRow(box(width='20%',h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1"),
+                               HTML("<p> With all social media platform options (TikTok, YouTube, Instagram, Facebook, 
+                                   Snapchat, Pinterest) selected as features, KNN analysis shows that the platform an individual 
+                                   uses doesn’t have a significant impact on BDD score. While the algorithm correctly predicted 11 
+                                   high scores as high, 8 low scores were incorrectly classified as high. 5 high scores were incorrectly 
+                                   predicted to be low. Only 3 low scores were predicted correctly by the KNN algorithm. This shows that 
+                                   the algorithm overdiagnosed many as having a high BDD score when they in fact did not. <p>")),
                      HTML("<br>"),
-            fluidRow(box(width='100%',h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2"),
-                    HTML("<p> With all of the BDD-score-determining questions selected as features, KNN much 
-                        more accurately predicts the scores of participants. This, of course, is to be expected. 
-                        15 actual high scores are correctly predicted to be high while only one was incorrectly 
-                        predicted to be low. Meanwhile, 8 low scores were correctly predicted as low while 3 were 
-                        incorrectly predicted as high. While there is still a trend of overdiagnosing low scores as 
-                        high, we see a more accurate analysis made by the KNN algorithm when taking into account BDD 
-                        Test questions.</p>
+            fluidRow(box(width='20%',h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2"),
+                              HTML("<p> With all of the BDD-score-determining questions selected as features, KNN much 
+                                  more accurately predicts the scores of participants. This, of course, is to be expected. 
+                                  15 actual high scores are correctly predicted to be high while only one was incorrectly 
+                                  predicted to be low. Meanwhile, 8 low scores were correctly predicted as low while 3 were 
+                                  incorrectly predicted as high. While there is still a trend of overdiagnosing low scores as 
+                                  high, we see a more accurate analysis made by the KNN algorithm when taking into account BDD 
+                                  Test questions.</p>
                                       
 ")))))
     
