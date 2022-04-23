@@ -163,7 +163,7 @@ sidebar <- dashboardSidebar(
     
     
     menuItem("Statistical Analysis", tabName = "statistical_analysis", 
-             menuSubItem("Linear Regression", tabName = "linear_regression"),
+             menuSubItem("Multiple Linear Regression", tabName = "linear_regression"),
              menuSubItem("Logistic Regression", tabName = "logistic_regression"),
              menuSubItem("Cluster Analysis", tabName = "cluster_analysis"),
              menuSubItem("kNN Analysis", tabName = "knn_analysis"))
