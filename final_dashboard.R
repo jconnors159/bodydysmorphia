@@ -187,8 +187,9 @@ body <-   dashboardBody(
                                 HTML("<p>“BDD Scores across Genders” is a histogram that looks at the distribution of BBD Scores by 
                                 personal pronouns (he, she, or they). The graph shows more of a distribution with a wide range of spread with 
                                 one peak value demonstrated on the “she” pronouns with a score of 30.00. A peak from male-identified 
-                                pronouns had a score of 21.3. Lastly, the “they” pronouns with a score of 22.6.</p>
-")))), # string name must match with sever 
+                                pronouns had a score of 21.3. Lastly, the “they” pronouns with a score of 22.6.</p>"),
+                                style = "font-size:16px"
+                                ))), # string name must match with sever 
                                 HTML("<br>"), 
                                 fluidRow(column(11, 
                                 box(width = '11', 
@@ -199,7 +200,9 @@ body <-   dashboardBody(
                                      as well as what platform, and opens the question of interest on what social media platforms should 
                                      be used in further analysis. Overall, the graph shows that Instagram is the most used application 
                                      among Freshmen, Sophomores, and Juniors, with Seniors being the only exception of having a higher 
-                                     count on YouTube.<p>")))),
+                                     count on YouTube.<p>"),
+                                style = "font-size:16px"
+                                ))),
                                 fluidRow(column(11,
                                 box(width = '11',
                                 h3("Topics Explored on Social Media"), plotlyOutput("plot3"),
@@ -208,7 +211,8 @@ body <-   dashboardBody(
                                 HTML("<p>“Topics Explored on Social Media” showcases the BDD scores' distribution across different 
                                      entertainment sources explored on social media. This is indexed by the Age group. There is a 
                                      higher shift of scores in the Technology/Smartphone section in the age group range of 18-20  
-                                     versus the 25+ age range showing a higher distribution in the topic of Celebrities.  <p>"), style = "font-size:16px",
+                                     versus the 25+ age range showing a higher distribution in the topic of Celebrities.  <p>"), 
+                                style = "font-size:16px",
                                 HTML("<br>"))
               )))),
 
@@ -225,12 +229,13 @@ body <-   dashboardBody(
                   they spend on social media daily. There were three given options on the question, less than 3 hours/day, 
                   3-10 hours/day and 10-20 hours/day. The only significant value of the three was 10-20 hours/day with a p-value 
                   of 0.0437 and had an average BDD Score of 10 points higher than both of the other options . We also found that 
-                  there was only a .1 difference in average BDD scores of those who spent 3 - 10 hours a day on social media versus 
+                  there was only a 0.1 difference in average BDD scores of those who spent 3 - 10 hours a day on social media versus 
                   those who spend less than 3 hours a day.  The r-squared value for the model comes out to 0.03 meaning that time 
                   spent on social media explains approximately 3% of the variance in BDD scores. While this is helpful to understand 
                   how time spent on social media can affect BDD scores, since there is a low level of confidence therefore we are unable 
                   to say that time spent on social media daily has an effect on BDD score.
-          <p>"))),
+          <p>"),
+                  style = "font-size:16px")),
               )),
     # page 4 ----
     tabItem(tabName = "logistic_regression",
@@ -245,7 +250,8 @@ body <-   dashboardBody(
                         a p-value of 0.01. This means that there is some correlation between this age group and BDD Scores, but more 
                         correlation compared to the age groupings. The p-value of 21-24 was 0.73 and 25+ was 0.69. There is insufficient 
                         evidence to conclude that a relationship exists between the two older age groupings and their effect on the BDD Score. 
-                        <p>")))),
+                        <p>"),
+                    style = "font-size:16px"))),
 
                 HTML("<br>"),
                 HTML("<br>"),
@@ -258,7 +264,8 @@ body <-   dashboardBody(
                         above, is that the predicted values (0.34, 0.31, and 0.39) are given based on the outcome, the outcome being 
                         the independent variables (18-20, 21-24, and 25+). The predicted values show the probability of there being an 
                         effect of age on BDD Scores is fairly low for each variable. They all equal about 0.35 on average. 
-                        <p>"))),
+                        <p>"),
+                    style = "font-size:16px")),
 
               ))),
     
@@ -273,7 +280,14 @@ body <-   dashboardBody(
                          in cluster 1 have, on average, a higher BDD score than those in cluster 2. These are individuals who not only 
                          experience appearance-related harassment online and frequently compare themselves to famous people on social 
                          media, but people who also spend, on average, over 3 hours a day on these social networking sites.
-                        <p>")))
+                        <p>"),
+                          HTML("<br>"),
+                          HTML("<p> <strong>Note:</strong> With k means cluster analysis, a principal component analysis is added to reduce the 
+                                 number of observations from 44 to 2 to simplify its complexity. Each dimension essentially represents 
+                                 a particular amount of variation kept in the original dataset. In this case, Dim1 accounts for 13.5% of 
+                                 the variation and Dim2 accounts for 8% of the variation. And together they account for 21.5% of the variation 
+                                 from the original data set. <p>"),
+                  style = "font-size:16px"))
               )),
     # page 6 ----
     tabItem(tabName = "knn_analysis", 
@@ -287,7 +301,8 @@ body <-   dashboardBody(
                              uses doesn’t have a significant impact on BDD score. While the algorithm correctly predicted 11 
                              high scores as high, 8 low scores were incorrectly classified as high. 5 high scores were incorrectly 
                              predicted to be low. Only 3 low scores were predicted correctly by the KNN algorithm. This shows that 
-                             the algorithm overdiagnosed many as having a high BDD score when they in fact did not. <p>")))),
+                             the algorithm overdiagnosed many as having a high BDD score when they in fact did not. <p>"),
+                         style = "font-size:16px"))),
                      HTML("<br>"),
             fluidRow( column(10,
                       box(width = "10", h3("KNN Analysis with BDD Questionnaire Questions"),  plotlyOutput("kkn2"),
@@ -299,7 +314,8 @@ body <-   dashboardBody(
                                  predicted to be low. Meanwhile, 8 low scores were correctly predicted as low while 3 were 
                                  incorrectly predicted as high. While there is still a trend of overdiagnosing low scores as 
                                  high, we see a more accurate analysis made by the KNN algorithm when taking into account BDD 
-                                 Test questions.</p>")
+                                 Test questions.</p>"),
+                          style = "font-size:16px"
                           )))))
     
   )
