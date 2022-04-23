@@ -219,13 +219,15 @@ summary(log_model)
 
 
 #Visualization of the results of log regression using a box&whisker plot b/c 3 vairables
+library(RColorBrewer)
 
 
-ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20)) +
+ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20, fill=Q20)) +
   geom_boxplot(outlier.colour="red", outlier.shape=8,
-               outlier.size=4) +
+               outlier.size=4, alpha=0.5) +
   coord_flip() +
-  stat_summary(fun=mean, geom="point", shape=23, size=4)
+  stat_summary(fun=mean, geom="point", shape=23, size=4) +
+  scale_fill_brewer(palette="Dark2") 
 
 #Visualization of the model to help see fit
 
@@ -234,10 +236,12 @@ ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20)) +
 effect("Q20", log_model) %>%
   data.frame() %>%
   ggplot(aes(y = fit,
-             x = Q20)) +
-  geom_col() +
-  geom_label(aes(label = format(fit, digits = 2)))
-
+             x = Q20, fill=Q20)) +
+  geom_col(colour="black", alpha=0.5) +
+  geom_label(aes(label = format(fit, digits = 2))) +
+  theme(legend.position = "none") +
+  scale_fill_brewer(palette = "Accent")
+  
 
 
 # Jocelyn - Logistic Regression END ------------------------

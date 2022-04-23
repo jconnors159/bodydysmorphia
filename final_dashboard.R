@@ -278,8 +278,8 @@ body <-   dashboardBody(
     # page 6 ----
     tabItem(tabName = "knn_analysis", 
             fluidPage(
-              fluidRow( column(11,
-                         box( width = "11",h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1"),
+              fluidRow( column(10,
+                         box( width = "10",h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1"),
                          HTML("<br>"),
                          HTML("<br>"),
                          HTML("<p> With all social media platform options (TikTok, YouTube, Instagram, Facebook, 
@@ -289,8 +289,8 @@ body <-   dashboardBody(
                              predicted to be low. Only 3 low scores were predicted correctly by the KNN algorithm. This shows that 
                              the algorithm overdiagnosed many as having a high BDD score when they in fact did not. <p>")))),
                      HTML("<br>"),
-            fluidRow( column(11,
-                      box(width = "11", h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2"),
+            fluidRow( column(10,
+                      box(width = "10", h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2"),
                              HTML("<br>"),
                              HTML("<br>"),
                              HTML("<p> With all of the BDD-score-determining questions selected as features, KNN much 
@@ -382,21 +382,28 @@ server <- function(input, output, session) {
   
   
   # logistic plots 
+  
   output$log_sumplot <- renderPlot({
-    
     effect("Q20", log_model) %>%
       data.frame() %>%
       ggplot(aes(y = fit,
-                 x = Q20)) +
-      geom_col() +
-      geom_label(aes(label = format(fit, digits = 2)))
+                 x = Q20, fill=Q20)) +
+      geom_col(colour="black", alpha=0.5) +
+      geom_label(aes(label = format(fit, digits = 2))) +
+      theme(legend.position = "none") +
+      scale_fill_brewer(palette = "Accent")
+    
   })
+
+  
   output$log_boxplot <- renderPlot({  
-    ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20)) +
+    ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20, fill=Q20)) +
       geom_boxplot(outlier.colour="red", outlier.shape=8,
-                   outlier.size=4) +
+                   outlier.size=4, alpha=0.5) +
       coord_flip() +
-      stat_summary(fun=mean, geom="point", shape=23, size=4)
+      stat_summary(fun=mean, geom="point", shape=23, size=4) +
+      scale_fill_brewer(palette="Dark2") 
+
   })
   
   # clusterplot
@@ -419,10 +426,11 @@ server <- function(input, output, session) {
       ggplot(aes(x = Q14,
                  y = fit,
                  ymin = lower,
-                 ymax = upper)) +
+                 ymax = upper,
+                 colour=Q14)) +
       xlab("Time Spent on Social Media per day")+
       ylab("Average BDD Score")+
-      geom_point() +
+      geom_point(color="red") +
       geom_errorbar()+
       scale_x_discrete(limits=c("<3 hrs/day", "3 - 10 hrs/day","10 - 20 hrs/day"))
 
@@ -433,7 +441,6 @@ server <- function(input, output, session) {
 
 
 shinyApp(ui, server)
-
 
 
 
