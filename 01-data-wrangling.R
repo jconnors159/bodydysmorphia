@@ -225,7 +225,10 @@ library(RColorBrewer)
 ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20, fill=Q20)) +
   geom_boxplot(outlier.colour="red", outlier.shape=8,
                outlier.size=4, alpha=0.5) +
+  xlab("Age")+
+  ylab("BDD Score")+
   coord_flip() +
+  theme(axis.title=element_text(size=14)) +
   stat_summary(fun=mean, geom="point", shape=23, size=4) +
   scale_fill_brewer(palette="Dark2") 
 
@@ -238,10 +241,12 @@ effect("Q20", log_model) %>%
   ggplot(aes(y = fit,
              x = Q20, fill=Q20)) +
   geom_col(colour="black", alpha=0.5) +
-  geom_label(aes(label = format(fit, digits = 2))) +
-  theme(legend.position = "none") +
-  scale_fill_brewer(palette = "Accent")
-  
+  geom_label(aes(label = scales::percent(fit, digits = 2))) +
+  xlab("Age")+
+  ylab("Predicted Probabilities for BDD Score")+
+  theme(axis.title=element_text(size=14),legend.position = "none") +
+  scale_fill_brewer(palette = "Accent") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
 
 
 # Jocelyn - Logistic Regression END ------------------------

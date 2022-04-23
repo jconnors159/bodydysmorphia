@@ -261,9 +261,9 @@ body <-   dashboardBody(
                     HTML("<p>This is further proven by looking at the second graph (Probability of Age Influencing BDD Score) 
                         and viewing how each age range has a probability of having an effect on the BDD Score. The effect, or fit, 
                         in this instance is the predicted values given by the logistic regression model. What this means for the plot 
-                        above, is that the predicted values (0.34, 0.31, and 0.39) are given based on the outcome, the outcome being 
+                        above, is that the predicted values (33.9%, 30.9%, and 38.9%) are given based on the outcome, the outcome being 
                         the independent variables (18-20, 21-24, and 25+). The predicted values show the probability of there being an 
-                        effect of age on BDD Scores is fairly low for each variable. They all equal about 0.35 on average. 
+                        effect of age on BDD Scores is fairly low for each variable. They all equal about 0.35 (34.6%) on average. 
                         <p>"),
                     style = "font-size:16px")),
 
@@ -405,14 +405,17 @@ server <- function(input, output, session) {
   # logistic plots 
   
   output$log_sumplot <- renderPlot({
-   effect("Q20", log_model) %>%
+    effect("Q20", log_model) %>%
       data.frame() %>%
       ggplot(aes(y = fit,
                  x = Q20, fill=Q20)) +
       geom_col(colour="black", alpha=0.5) +
-      geom_label(aes(label = format(fit, digits = 2))) +
-      theme(legend.position = "none") +
-      scale_fill_brewer(palette = "Accent")
+      geom_label(aes(label = scales::percent(fit, digits = 2))) +
+      xlab("Age")+
+      ylab("Predicted Probabilities for BDD Score")+
+      theme(axis.title=element_text(size=14),legend.position = "none") +
+      scale_fill_brewer(palette = "Accent") +
+      scale_y_continuous(labels = scales::percent_format(accuracy = 1))
     
    
   })
@@ -422,7 +425,10 @@ server <- function(input, output, session) {
     ggplot(cp_bdd_survey_data, aes(x=BDD_Score, y=Q20, fill=Q20)) +
       geom_boxplot(outlier.colour="red", outlier.shape=8,
                    outlier.size=4, alpha=0.5) +
+      xlab("Age")+
+      ylab("BDD Score")+
       coord_flip() +
+      theme(axis.title=element_text(size=14)) +
       stat_summary(fun=mean, geom="point", shape=23, size=4) +
       scale_fill_brewer(palette="Dark2")
     
