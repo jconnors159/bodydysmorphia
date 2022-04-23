@@ -153,7 +153,7 @@ kknplot2 <-final_plot
 #
 # Start of the webpage 
 #
-header <- dashboardHeader(title = "Cross Study of Body Dismorphia and Social Media"
+header <- dashboardHeader(title = "Cross-Sectional Study of Body Dysmorphic Disorder (BDD) and  Social Media", titleWidth = "750"
 )
 
 sidebar <- dashboardSidebar(
@@ -218,7 +218,7 @@ body <-   dashboardBody(
     tabItem(tabName = "linear_regression",
               fluidRow(column(11,
               box( width = "11",
-                  h3("Average BDD Score Based on Hours Spent on Social Media Daily"), plotOutput("multiplot"),
+                  h3("Average BDD Score Based on Hours Spent on Social Media Daily"),  plotlyOutput("multiplot"),
                   HTML("<br>"),
                   HTML("<br>"),
                   HTML("<p> This graph shows the average BDD score of the participants of the survey based on how much time 
@@ -236,7 +236,7 @@ body <-   dashboardBody(
     tabItem(tabName = "logistic_regression",
             fluidPage(
               fluidRow( column(11, 
-                box(width='11',h3("Average BDD Score Based on Age Range"),plotOutput("log_boxplot"),
+                box(width='11',h3("Average BDD Score Based on Age Range"), plotOutput("log_boxplot"),
                     HTML("<br>"),
                     HTML("<br>"),
                     HTML("<p>The purpose of the first graph is to show the average BDD Score based on each of the three age 
@@ -250,7 +250,7 @@ body <-   dashboardBody(
                 HTML("<br>"),
                 HTML("<br>"),
                 fluidRow( column(11, 
-                  box(width='11',h3("Probability of Age Influencing BDD Score"), plotOutput("log_sumplot"),
+                  box(width='11',h3("Probability of Age Influencing BDD Score"),  plotOutput("log_sumplot"),
                     HTML("<br>"),
                     HTML("<p>This is further proven by looking at the second graph (Probability of Age Influencing BDD Score) 
                         and viewing how each age range has a probability of having an effect on the BDD Score. The effect, or fit, 
@@ -265,7 +265,7 @@ body <-   dashboardBody(
     # page 5 ----
     tabItem(tabName = "cluster_analysis",
             fluidRow( column(11,
-              box(width='11', h3("Cluster Analysis of Average BDD Scores"),plotOutput("clusterplot"), 
+              box(width='11', h3("Cluster Analysis of Average BDD Scores"), plotlyOutput("clusterplot"), 
                          HTML("<br>"),
                          HTML("<br>"),
                          HTML("<p>This model breaks the data into two clusters, or groups, where the first cluster consists of 
@@ -279,7 +279,7 @@ body <-   dashboardBody(
     tabItem(tabName = "knn_analysis", 
             fluidPage(
               fluidRow( column(10,
-                         box( width = "10",h3("KNN Analysis with Social Media Platforms"), plotOutput("kkn1"),
+                         box( width = "10",h3("KNN Analysis with Social Media Platforms"), plotlyOutput("kkn1"),
                          HTML("<br>"),
                          HTML("<br>"),
                          HTML("<p> With all social media platform options (TikTok, YouTube, Instagram, Facebook, 
@@ -290,7 +290,7 @@ body <-   dashboardBody(
                              the algorithm overdiagnosed many as having a high BDD score when they in fact did not. <p>")))),
                      HTML("<br>"),
             fluidRow( column(10,
-                      box(width = "10", h3("KNN Analysis with BDD Questionnaire Questions"), plotOutput("kkn2"),
+                      box(width = "10", h3("KNN Analysis with BDD Questionnaire Questions"),  plotlyOutput("kkn2"),
                              HTML("<br>"),
                              HTML("<br>"),
                              HTML("<p> With all of the BDD-score-determining questions selected as features, KNN much 
@@ -328,6 +328,7 @@ server <- function(input, output, session) {
       geom_histogram(binwidth = 2, alpha= 0.5, position = "dodge")+
       scale_color_brewer(palette="Set1")+
       xlab("BDD Score")+ylab("Amount")
+    
     gplot1 <- ggplotly(gplot1)
   })
   
@@ -350,6 +351,7 @@ server <- function(input, output, session) {
       geom_bar()+
       xlab("Class Standing")+ylab("Amount")+guides(fill=guide_legend("Social Media"))+ 
       scale_x_discrete(limits = positions)
+    
     gplot2 <-ggplotly(gplot2)
   })
   
@@ -368,23 +370,26 @@ server <- function(input, output, session) {
       ggplot(aes(x = Q16, y = BDD_Score, fill= Q20))+
       geom_boxplot()+coord_flip()+
       ylab("BDD Scores")+xlab("Entertainment")+guides(fill=guide_legend("Age group"))
+    
     gplot3 <-ggplotly(gplot3)
   })
   
   ## KNN plots 
   
-  output$kkn1 <- renderPlot({
-    kknplot1
+  output$kkn1 <- renderPlotly({
+    gplot4 <- kknplot1
+    gplot4 <-ggplotly(gplot4)
   })
-  output$kkn2 <- renderPlot({
-    kknplot2
+  output$kkn2 <- renderPlotly({
+    gplot5 <-kknplot2
+    gplot5 <-ggplotly(gplot5)
   })
   
   
   # logistic plots 
   
   output$log_sumplot <- renderPlot({
-    effect("Q20", log_model) %>%
+   effect("Q20", log_model) %>%
       data.frame() %>%
       ggplot(aes(y = fit,
                  x = Q20, fill=Q20)) +
@@ -393,6 +398,7 @@ server <- function(input, output, session) {
       theme(legend.position = "none") +
       scale_fill_brewer(palette = "Accent")
     
+   
   })
 
   
@@ -402,12 +408,13 @@ server <- function(input, output, session) {
                    outlier.size=4, alpha=0.5) +
       coord_flip() +
       stat_summary(fun=mean, geom="point", shape=23, size=4) +
-      scale_fill_brewer(palette="Dark2") 
-
+      scale_fill_brewer(palette="Dark2")
+    
+   
   })
   
   # clusterplot
-  output$clusterplot <- renderPlot({
+  output$clusterplot <-renderPlotly({
     set.seed(123)
     demograph_data <- subset_bdd_data[,18:22] %>% rownames_to_column()
     newdata <- subset_bdd_data[,2:10]
@@ -415,13 +422,14 @@ server <- function(input, output, session) {
     newdata <- one_hot(as.data.table(newdata))
     km <- kmeans(newdata, centers = 2)
     #km
-    fviz_cluster(km, newdata, geom = "point")
+    gplot8 <- fviz_cluster(km, newdata, geom = "point")
+    gplot8<-ggplotly(gplot8)
     })
   
   
   # mulit linear or not plot ?
-  output$multiplot <- renderPlot({
-    effect("Q14", bdd_linear_model_time) %>%
+  output$multiplot <- renderPlotly({
+    gplot9 <- effect("Q14", bdd_linear_model_time) %>%
       data.frame() %>%
       ggplot(aes(x = Q14,
                  y = fit,
@@ -433,7 +441,7 @@ server <- function(input, output, session) {
       geom_point(color="red") +
       geom_errorbar()+
       scale_x_discrete(limits=c("<3 hrs/day", "3 - 10 hrs/day","10 - 20 hrs/day"))
-
+    gplot9<-ggplotly(gplot9)
   })
   
   
